@@ -1,0 +1,27 @@
+{
+  "name": "@secoya/rabbitmq-tools",
+  "version": "2.0.3",
+  "description": "Tools for interfacing with RabbitMQ",
+  "main": "lib/index.js",
+  "repository": "https://github.com/secoya/rabbitmq-tools",
+  "author": "Kaare Hoff Skovgaard <khs@secoya.dk>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --coverage",
+    "lint": "tslint --project tsconfig.json src/*.ts src/**/*.ts",
+    "build": "rm -rf lib && tsc -p tsconfig-build.json",
+    "prepublish": "yarn test && yarn run lint && yarn build"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.5.1",
+    "jest": "^18.1.0",
+    "jest-environment-node-debug": "^1.0.0",
+    "ts-jest": "^18.0.3",
+    "tslint": "^4.4.2",
+    "typescript": "^2.1.6"
+  },
+  "dependencies": {
+    "amqplib": "^0.5.1",
+    "rxjs": "^5.1.1"
+  }
+}
