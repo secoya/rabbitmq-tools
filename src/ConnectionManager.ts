@@ -191,6 +191,7 @@ export class ConnectionManager {
 					durable: topology.durable != null ? topology.durable : true,
 				});
 			}
+			await ch.close();
 		} catch (e) {
 			console.error(e);
 			process.exit(1);
