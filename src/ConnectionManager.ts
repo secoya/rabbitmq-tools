@@ -15,10 +15,6 @@ function connect(opts: AmqplibOpts): Promise<amqplib.Connection> {
 	return amqplib.connect(opts as any) as any;
 }
 
-function sleep(millis: number): Promise<void> {
-	return new Promise<void>(resolve => setTimeout(resolve, millis));
-}
-
 interface AmqplibOpts {
 	hostname: string;
 	password: string;
@@ -152,11 +148,11 @@ export class ConnectionManager {
 		}
 		await this.connectionDelay;
 		this.connectionAttempts++;
-		this.connection = connect(connectionOptsToAmqplibOpts(this.connectionOptions));
+		const connectionPromise = connect(connectionOptsToAmqplibOpts(this.connectionOptions));
 
 		let conn: amqplib.Connection;
 		try {
-			conn = await this.connection;
+			conn = await connectionPromise;
 			this.connectionAttempts = 0;
 			this.connected = true;
 			this.conn = conn;
@@ -194,9 +190,6 @@ export class ConnectionManager {
 					deadLetterRoutingKey: topology.deadLetterRoutingKey,
 					durable: topology.durable != null ? topology.durable : true,
 				});
-				// I have observed a bug where it is not guarenteed that the queue exists right after
-				// calling assertQueue - so we have to resort to these sorts of nasty ways of doing things.
-				await sleep(50);
 			}
 			await ch.close();
 		} catch (e) {
