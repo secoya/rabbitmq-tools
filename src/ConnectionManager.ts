@@ -184,8 +184,8 @@ export class ConnectionManager {
 		try {
 			const ch = await conn.createChannel();
 			for (const topology of this.queueTopology) {
-				const dlx = topology.deadLetterExchange || topology.deadLetterRoutingKey != null ? '' : undefined;
-				ch.assertQueue(topology.queueName, {
+				const dlx = topology.deadLetterExchange || (topology.deadLetterRoutingKey != null ? '' : undefined);
+				await ch.assertQueue(topology.queueName, {
 					deadLetterExchange: dlx,
 					deadLetterRoutingKey: topology.deadLetterRoutingKey,
 					durable: topology.durable != null ? topology.durable : true,
