@@ -66,34 +66,36 @@ export function createPublisher(
 		});
 	};
 	newPromise();
-	const subscription = createChannelObservable(
-		connectionManager,
-		connectionOpened,
-		connectionClosed,
-	).retryWhen((errors) => {
-		return errors.map(e => {
-			newPromise();
-			return null;
-		});
-	}).flatMap(async ch => {
-		try {
-			await ch.checkQueue(publisherOptions.queueName);
+	const subscription = createChannelObservable(connectionManager, connectionOpened, connectionClosed)
+		.retryWhen(errors => {
+			return errors.map(e => {
+				newPromise();
+				return null;
+			});
+		})
+		.flatMap(async ch => {
+			try {
+				await ch.checkQueue(publisherOptions.queueName);
 
-			return ch;
-		} catch (e) {
-			console.error(e);
-			process.exit(1);
-		}
-	}).subscribe({
-		error: (e: Error) => {
-			console.error('Unknown error');
-			console.error(e.stack);
-			process.exit(1);
-		},
-		next: (channel: amqplib.Channel) => {
-			resolvePromise(channel);
-		},
-	});
+				return ch;
+			} catch (e) {
+				// tslint:disable-next-line:no-console
+				console.error(e);
+				process.exit(1);
+			}
+		})
+		.subscribe({
+			error: (e: Error) => {
+				// tslint:disable-next-line:no-console
+				console.error('Unknown error');
+				// tslint:disable-next-line:no-console
+				console.error(e.stack);
+				process.exit(1);
+			},
+			next: (channel: amqplib.Channel) => {
+				resolvePromise(channel);
+			},
+		});
 	const maxSize = publisherOptions.maximumInMemoryQueueSize || 100;
 	let deliveringMessages = false;
 
@@ -138,6 +140,7 @@ export function createPublisher(
 
 		if (!deliveringMessages) {
 			deliver().catch((e: Error) => {
+				// tslint:disable-next-line:no-console
 				console.error(e);
 				process.exit(1);
 			});

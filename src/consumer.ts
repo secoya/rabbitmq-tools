@@ -52,6 +52,7 @@ async function createConsumer(
 		};
 		if (consumerTag != null && channel != null && connected && cancelChannel) {
 			channel.cancel(consumerTag).then(onConnectionClosed).catch(e => {
+				// tslint:disable-next-line:no-console
 				console.error('Unhooking consumer error', e);
 				process.exit(1);
 			});
@@ -137,13 +138,9 @@ async function createConsumer(
 	try {
 		await channel.checkQueue(consumerOptions.queueName);
 		await channel.prefetch(consumerOptions.prefetch || 1); // Not global, ie. per consumer
-		consumerTag = (await channel.consume(
-			consumerOptions.queueName,
-			onMessage,
-			{
-				noAck: false,
-			},
-		)).consumerTag;
+		consumerTag = (await channel.consume(consumerOptions.queueName, onMessage, {
+			noAck: false,
+		})).consumerTag;
 	} catch (e) {
 		subscriber.error(e);
 		teardown();
@@ -161,35 +158,34 @@ export function consumeQueue(
 	connectionClosed: () => void,
 	consumerOptions: ConsumerOptions,
 ): RxJS.Observable<Message> {
-	return new RxJS.Observable<Message>(
-		(subscriber) => {
-			let closed = false;
-			let closeCallback: (() => void) | null = null;
-			const onClose: OnCloseCallback = (cb) => {
-				if (closed) {
-					cb();
-				} else {
-					closeCallback = cb;
-				}
-			};
-			createConsumer(
-				connectionManager,
-				consumerOptions,
-				connectionOpened,
-				connectionClosed,
-				subscriber,
-				onClose,
-			).catch((e: Error) => {
-				console.error('Create consumer error', e.stack);
-				process.exit(1);
-			});
+	return new RxJS.Observable<Message>(subscriber => {
+		let closed = false;
+		let closeCallback: (() => void) | null = null;
+		const onClose: OnCloseCallback = cb => {
+			if (closed) {
+				cb();
+			} else {
+				closeCallback = cb;
+			}
+		};
+		createConsumer(
+			connectionManager,
+			consumerOptions,
+			connectionOpened,
+			connectionClosed,
+			subscriber,
+			onClose,
+		).catch((e: Error) => {
+			// tslint:disable-next-line:no-console
+			console.error('Create consumer error', e.stack);
+			process.exit(1);
+		});
 
-			return () => {
-				closed = true;
-				if (closeCallback != null) {
-					closeCallback();
-				}
-			};
-		},
-	);
+		return () => {
+			closed = true;
+			if (closeCallback != null) {
+				closeCallback();
+			}
+		};
+	});
 }

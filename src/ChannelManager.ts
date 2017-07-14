@@ -8,10 +8,10 @@ export function createChannelObservable(
 	connectionOpened: () => void,
 	connectionClosed: () => void,
 ): Observable<amqplib.Channel> {
-	return new Observable((subscriber) => {
+	return new Observable(subscriber => {
 		let isClosed = false;
 		let isCleanupHandlersCalled = false;
-		let onClose = (err?: Error) => {
+		const onClose = (err?: Error) => {
 			if (!isCleanupHandlersCalled) {
 				cleanupLogic.forEach(v => v());
 				isCleanupHandlersCalled = true;

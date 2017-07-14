@@ -35,14 +35,16 @@ function connectionOptsToAmqplibOpts(opts: ConnectionOptions): AmqplibOpts {
 	};
 }
 
-function timer(millis: number): {
+function timer(
+	millis: number,
+): {
 	promise: Promise<void>;
 	cancel: () => void;
 } {
 	let cancel: () => void = null as any;
 	const p = new Promise<void>((resolve, reject) => {
-		const timer = setTimeout(resolve, millis);
-		cancel = () => clearTimeout(timer);
+		const timeout = setTimeout(resolve, millis);
+		cancel = () => clearTimeout(timeout);
 	});
 
 	return {
@@ -93,7 +95,7 @@ export class ConnectionManager {
 		this.onDisconnectingCallbacks = [];
 		this.isClosing = false;
 		this.connectionAttempts = 0;
-		this.cancelReconnect = () => void (0);
+		this.cancelReconnect = () => void 0;
 		this.connectionDelay = Promise.resolve();
 		this.queueTopology = [];
 	}
@@ -131,6 +133,7 @@ export class ConnectionManager {
 			this.connected = false;
 			if (!this.isClosing) {
 				conn.close().catch(e => {
+					// tslint:disable-next-line:no-console
 					console.error(e.stack);
 					process.exit(1);
 				});
@@ -157,7 +160,6 @@ export class ConnectionManager {
 			this.connected = true;
 			this.conn = conn;
 			this.triggerConnectedCallbacks();
-
 		} catch (e) {
 			const t = timer(Math.min(60 * 1000, Math.pow(2, this.connectionAttempts) * 1000));
 			this.connectionDelay = t.promise;
@@ -193,6 +195,7 @@ export class ConnectionManager {
 			}
 			await ch.close();
 		} catch (e) {
+			// tslint:disable-next-line:no-console
 			console.error(e);
 			process.exit(1);
 		}
