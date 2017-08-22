@@ -1,7 +1,7 @@
 import * as amqplib from 'amqplib';
 import { Observable, Subscriber } from 'rxjs';
-import { consumeQueue, ConsumerOptions, Message } from './consumer';
-import { createPublisher, Publisher, PublisherOptions } from './publisher';
+import { consumeQueue, ConsumerOptions, Message } from './Consumer';
+import { createPublisher, Publisher, PublisherOptions } from './Publisher';
 
 export interface ConnectionOptions {
 	host: string;
