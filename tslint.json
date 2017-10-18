@@ -27,7 +27,13 @@
 		"interface-name": [
 			false
 		],
+		"semicolon": [
+			true,
+			"always",
+			"ignore-bound-class-methods"
+		],
 		"array-type": [
+			true,
 			"array"
 		],
 		"only-arrow-functions": [

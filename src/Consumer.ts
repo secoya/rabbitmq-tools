@@ -51,11 +51,14 @@ async function createConsumer(
 			}
 		};
 		if (consumerTag != null && channel != null && connected && cancelChannel) {
-			channel.cancel(consumerTag).then(onConnectionClosed).catch(e => {
-				// tslint:disable-next-line:no-console
-				console.error('Unhooking consumer error', e);
-				process.exit(1);
-			});
+			channel
+				.cancel(consumerTag)
+				.then(onConnectionClosed)
+				.catch(e => {
+					// tslint:disable-next-line:no-console
+					console.error('Unhooking consumer error', e);
+					process.exit(1);
+				});
 			closeConnection = false;
 		}
 		if (channel != null) {

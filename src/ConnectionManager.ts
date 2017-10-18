@@ -115,7 +115,7 @@ export class ConnectionManager {
 
 	private connectionOpened = () => {
 		this.openConnections++;
-	}
+	};
 
 	private connectionClosed = () => {
 		if (!this.connected) {
@@ -139,7 +139,7 @@ export class ConnectionManager {
 				});
 			}
 		}
-	}
+	};
 
 	private triggerConnectedCallbacks(): void {
 		this.onConnectedCallbacks.forEach(v => v());
