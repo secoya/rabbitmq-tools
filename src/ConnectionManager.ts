@@ -55,6 +55,7 @@ function timer(
 
 export interface QueueTopology {
 	queueName: string;
+	autoDelete?: boolean;
 	durable?: boolean;
 	/**
 	 * Specifies a dead letter exchange. Use this only to route to an actual exchange.
@@ -188,6 +189,7 @@ export class ConnectionManager {
 			for (const topology of this.queueTopology) {
 				const dlx = topology.deadLetterExchange || (topology.deadLetterRoutingKey != null ? '' : undefined);
 				await ch.assertQueue(topology.queueName, {
+					autoDelete: topology.autoDelete != null ? topology.autoDelete : true,
 					deadLetterExchange: dlx,
 					deadLetterRoutingKey: topology.deadLetterRoutingKey,
 					durable: topology.durable != null ? topology.durable : true,
