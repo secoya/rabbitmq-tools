@@ -16,11 +16,11 @@
   },
   "devDependencies": {
     "@types/amqplib": "0.5.7",
-    "jest": "23.1.0",
-    "prettier": "1.13.4",
-    "ts-jest": "22.4.6",
-    "tslint": "5.10.0",
-    "typescript": "2.9.1"
+    "jest": "23.6.0",
+    "prettier": "1.15.2",
+    "ts-jest": "23.10.4",
+    "tslint": "5.11.0",
+    "typescript": "3.1.6"
   },
   "dependencies": {
     "amqplib": "0.5.2",
