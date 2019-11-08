@@ -6,7 +6,7 @@ COPY package.json yarn.lock /library/
 RUN yarn install --frozen-lockfile
 
 COPY tsconfig.json tslint.json /library/
-COPY typings/ /library/typings/
+COPY types/ /library/types/
 COPY src/ /library/src/
 RUN node_modules/.bin/tslint -p tsconfig.json
 RUN node_modules/.bin/tsc -p tsconfig.json
