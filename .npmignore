@@ -1,4 +1,5 @@
-.*
-.*/
-coverage/
-types/
+/.*
+/src/
+Dockerfile
+tsconfig.json
+tslint.json
