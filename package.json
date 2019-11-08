@@ -3,6 +3,7 @@
 	"version": "3.0.1",
 	"description": "Tools for interfacing with RabbitMQ",
 	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"repository": "https://github.com/secoya/rabbitmq-tools",
 	"author": "Kaare Hoff Skovgaard <khs@secoya.dk>",
 	"license": "MIT",
