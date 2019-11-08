@@ -1,6 +1,6 @@
 {
 	"name": "@secoya/rabbitmq-tools",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"description": "Tools for interfacing with RabbitMQ",
 	"main": "dist/index.js",
 	"repository": "https://github.com/secoya/rabbitmq-tools",
