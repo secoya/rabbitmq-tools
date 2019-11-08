@@ -93,7 +93,7 @@ async function createConsumer(
 		}
 		teardown();
 	};
-	const onChannelClose = (err?: Error) => {
+	const onChannelClose = (_: Error) => {
 		cancelChannel = false;
 		teardown();
 	};

@@ -9,7 +9,6 @@ export function createChannelObservable(
 	connectionClosed: () => void,
 ): Observable<amqplib.Channel> {
 	return new Observable(subscriber => {
-		let isClosed = false;
 		let isCleanupHandlersCalled = false;
 		const onClose = (err?: Error) => {
 			if (!isCleanupHandlersCalled) {
@@ -21,7 +20,6 @@ export function createChannelObservable(
 			} else {
 				subscriber.complete();
 			}
-			isClosed = true;
 		};
 		const cleanupLogic: (() => void)[] = [];
 		const createChannel = async () => {
@@ -55,9 +53,6 @@ export function createChannelObservable(
 				});
 
 				const channel = await conn.createChannel();
-				const onChannelError = (err: Error) => {
-					onClose(err);
-				};
 				channel.on('error', onClose);
 				cleanupLogic.push(() => {
 					channel.removeListener('error', onClose);
@@ -75,7 +70,6 @@ export function createChannelObservable(
 		};
 
 		createChannel().catch(e => {
-			isClosed = true;
 			subscriber.error(e);
 		});
 

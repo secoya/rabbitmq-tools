@@ -1,5 +1,6 @@
 import * as amqplib from 'amqplib';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable } from 'rxjs';
+import { retry } from 'rxjs/operators';
 import { consumeQueue, ConsumerOptions, Message } from './Consumer';
 import { createPublisher, Publisher, PublisherOptions } from './Publisher';
 
@@ -79,7 +80,6 @@ export class ConnectionManager {
 	private isClosing: boolean;
 	private onConnectedCallbacks: (() => void)[];
 	private onDisconnectedCallbacks: ((err?: Error) => void)[];
-	private onDisconnectingCallbacks: (() => void)[];
 	private connectionAttempts: number;
 	private cancelReconnect: () => void;
 	private connectionDelay: Promise<void>;
@@ -93,7 +93,6 @@ export class ConnectionManager {
 		this.conn = null;
 		this.onDisconnectedCallbacks = [];
 		this.onConnectedCallbacks = [];
-		this.onDisconnectingCallbacks = [];
 		this.isClosing = false;
 		this.connectionAttempts = 0;
 		this.cancelReconnect = () => void 0;
@@ -232,7 +231,7 @@ export class ConnectionManager {
 		const consumer = consumeQueue(this, this.connectionOpened, this.connectionClosed, opts);
 
 		if (reconnectOnFailure) {
-			return consumer.retry();
+			return consumer.pipe(retry());
 		}
 
 		return consumer;

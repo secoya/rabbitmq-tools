@@ -1,29 +1,29 @@
 {
-  "name": "@secoya/rabbitmq-tools",
-  "version": "2.5.0",
-  "description": "Tools for interfacing with RabbitMQ",
-  "main": "lib/index.js",
-  "repository": "https://github.com/secoya/rabbitmq-tools",
-  "author": "Kaare Hoff Skovgaard <khs@secoya.dk>",
-  "license": "MIT",
-  "scripts": {
-    "test": "jest --coverage",
-    "lint": "tslint --project tsconfig.json src/*.ts src/**/*.ts",
-    "fmt": "prettier --write -l 'src/**/*.ts'",
-    "typecheck": "./node_modules/.bin/tsc --project tsconfig.json --noEmit",
-    "build": "rm -rf lib && tsc -p tsconfig-build.json",
-    "prepublishOnly": "npm run lint && npm run build"
-  },
-  "devDependencies": {
-    "@types/amqplib": "0.5.13",
-    "jest": "24.8.0",
-    "prettier": "1.18.2",
-    "ts-jest": "24.0.2",
-    "tslint": "5.18.0",
-    "typescript": "3.5.3"
-  },
-  "dependencies": {
-    "amqplib": "0.5.3",
-    "rxjs": "5.5.12"
-  }
+	"name": "@secoya/rabbitmq-tools",
+	"version": "3.0.0",
+	"description": "Tools for interfacing with RabbitMQ",
+	"main": "dist/index.js",
+	"repository": "https://github.com/secoya/rabbitmq-tools",
+	"author": "Kaare Hoff Skovgaard <khs@secoya.dk>",
+	"license": "MIT",
+	"scripts": {
+		"test": "jest --coverage",
+		"lint": "tslint --project tsconfig.json src/*.ts src/**/*.ts",
+		"fmt": "prettier --write -l 'src/**/*.ts'",
+		"typecheck": "./node_modules/.bin/tsc --project tsconfig.json --noEmit",
+		"build": "rm -rf dist && docker build -t rabbitmq-tools:latest . && docker run --rm -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v $PWD/dist:/artifacts/dist:rw rabbitmq-tools:latest",
+		"prepublishOnly": "npm run lint && npm run build"
+	},
+	"devDependencies": {
+		"@types/amqplib": "0.5.13",
+		"jest": "24.9.0",
+		"prettier": "1.18.2",
+		"ts-jest": "24.1.0",
+		"tslint": "5.20.1",
+		"typescript": "3.6.4"
+	},
+	"dependencies": {
+		"amqplib": "0.5.5",
+		"rxjs": "6.5.3"
+	}
 }

@@ -1,7 +1,8 @@
 import * as amqplib from 'amqplib';
+import { Channel } from 'amqplib';
 import { IllegalOperationError } from 'amqplib/lib/error';
 import { EventEmitter } from 'events';
-import { Observable } from 'rxjs';
+import { flatMap, map, retryWhen } from 'rxjs/operators';
 import { createChannelObservable } from './ChannelManager';
 import { ConnectionManager } from './ConnectionManager';
 import { TimeoutError } from './TimeoutError';
@@ -33,7 +34,7 @@ function timer(millis: number): Promise<typeof TIMEOUT> {
 	});
 }
 
-function waitFor(eventEmitter: EventEmitter, eventName: string): Promise<void> {
+function waitFor(eventEmitter: EventEmitter, _: string): Promise<void> {
 	return new Promise<void>((resolve, reject) => {
 		const onError = (err: Error) => {
 			eventEmitter.removeListener('drain', onSuccess);
@@ -67,23 +68,27 @@ export function createPublisher(
 	};
 	newPromise();
 	const subscription = createChannelObservable(connectionManager, connectionOpened, connectionClosed)
-		.retryWhen(errors => {
-			return errors.map(e => {
-				newPromise();
-				return null;
-			});
-		})
-		.flatMap(async ch => {
-			try {
-				await ch.checkQueue(publisherOptions.queueName);
+		.pipe(
+			retryWhen(errors => {
+				return errors.pipe(
+					map(e => {
+						newPromise();
+						return null;
+					}),
+				);
+			}),
+			flatMap(async (ch: Channel) => {
+				try {
+					await ch.checkQueue(publisherOptions.queueName);
 
-				return ch;
-			} catch (e) {
-				// tslint:disable-next-line:no-console
-				console.error(e);
-				process.exit(1);
-			}
-		})
+					return ch;
+				} catch (e) {
+					// tslint:disable-next-line:no-console
+					console.error(e);
+					process.exit(1);
+				}
+			}),
+		)
 		.subscribe({
 			error: (e: Error) => {
 				// tslint:disable-next-line:no-console
@@ -96,7 +101,6 @@ export function createPublisher(
 				resolvePromise(channel);
 			},
 		});
-	const maxSize = publisherOptions.maximumInMemoryQueueSize || 100;
 	let deliveringMessages = false;
 
 	const deliver = async () => {
