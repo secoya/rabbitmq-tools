@@ -6,6 +6,7 @@ import { flatMap, map, retryWhen } from 'rxjs/operators';
 import { createChannelObservable } from './ChannelManager';
 import { ConnectionManager } from './ConnectionManager';
 import { TimeoutError } from './TimeoutError';
+
 export interface Publisher {
 	/**
 	 * Publishes the given message, and returns a promise that indicates when the message is received
@@ -165,6 +166,7 @@ export function createPublisher(
 			}
 			return;
 		}
+		return promise;
 	};
 
 	(publish as Publisher).closePublisher = () => {
