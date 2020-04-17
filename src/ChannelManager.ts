@@ -8,11 +8,11 @@ export function createChannelObservable(
 	connectionOpened: () => void,
 	connectionClosed: () => void,
 ): Observable<amqplib.Channel> {
-	return new Observable(subscriber => {
+	return new Observable((subscriber) => {
 		let isCleanupHandlersCalled = false;
 		const onClose = (err?: Error) => {
 			if (!isCleanupHandlersCalled) {
-				cleanupLogic.forEach(v => v());
+				cleanupLogic.forEach((v) => v());
 				isCleanupHandlersCalled = true;
 			}
 			if (err) {
@@ -69,7 +69,7 @@ export function createChannelObservable(
 			}
 		};
 
-		createChannel().catch(e => {
+		createChannel().catch((e) => {
 			subscriber.error(e);
 		});
 

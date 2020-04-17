@@ -54,7 +54,7 @@ async function createConsumer(
 			channel
 				.cancel(consumerTag)
 				.then(onConnectionClosed)
-				.catch(e => {
+				.catch((e) => {
 					// tslint:disable-next-line:no-console
 					console.error('Unhooking consumer error', e);
 					process.exit(1);
@@ -141,9 +141,11 @@ async function createConsumer(
 	try {
 		await channel.checkQueue(consumerOptions.queueName);
 		await channel.prefetch(consumerOptions.prefetch || 1); // Not global, ie. per consumer
-		consumerTag = (await channel.consume(consumerOptions.queueName, onMessage, {
-			noAck: false,
-		})).consumerTag;
+		consumerTag = (
+			await channel.consume(consumerOptions.queueName, onMessage, {
+				noAck: false,
+			})
+		).consumerTag;
 	} catch (e) {
 		subscriber.error(e);
 		teardown();
@@ -161,10 +163,10 @@ export function consumeQueue(
 	connectionClosed: () => void,
 	consumerOptions: ConsumerOptions,
 ): RxJS.Observable<Message> {
-	return new RxJS.Observable<Message>(subscriber => {
+	return new RxJS.Observable<Message>((subscriber) => {
 		let closed = false;
 		let closeCallback: (() => void) | null = null;
-		const onClose: OnCloseCallback = cb => {
+		const onClose: OnCloseCallback = (cb) => {
 			if (closed) {
 				cb();
 			} else {

@@ -70,9 +70,9 @@ export function createPublisher(
 	newPromise();
 	const subscription = createChannelObservable(connectionManager, connectionOpened, connectionClosed)
 		.pipe(
-			retryWhen(errors => {
+			retryWhen((errors) => {
 				return errors.pipe(
-					map(e => {
+					map((e) => {
 						newPromise();
 						return null;
 					}),

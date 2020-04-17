@@ -110,7 +110,7 @@ export class ConnectionManager {
 	}
 
 	private onDisconnect(err?: Error): void {
-		this.onDisconnectedCallbacks.forEach(v => v(err));
+		this.onDisconnectedCallbacks.forEach((v) => v(err));
 	}
 
 	private connectionOpened = () => {
@@ -132,7 +132,7 @@ export class ConnectionManager {
 			this.conn = null;
 			this.connected = false;
 			if (!this.isClosing) {
-				conn.close().catch(e => {
+				conn.close().catch((e) => {
 					// tslint:disable-next-line:no-console
 					console.error(e.stack);
 					process.exit(1);
@@ -142,7 +142,7 @@ export class ConnectionManager {
 	};
 
 	private triggerConnectedCallbacks(): void {
-		this.onConnectedCallbacks.forEach(v => v());
+		this.onConnectedCallbacks.forEach((v) => v());
 	}
 
 	private async connect(): Promise<amqplib.Connection> {
