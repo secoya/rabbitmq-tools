@@ -7,16 +7,18 @@ import { createChannelObservable } from './ChannelManager';
 import { ConnectionManager } from './ConnectionManager';
 import { TimeoutError } from './TimeoutError';
 
+type PublishingOptions = Omit<amqplib.Options.Publish, 'persistent'>;
 export interface Publisher {
 	/**
 	 * Publishes the given message, and returns a promise that indicates when the message is received
 	 * by RabbitMQ.
 	 * @param msg The message to send
+	 * @param options Message publishing options, like header data or expiration time
 	 * @param timeout Amount of time to wait for the server to acknowledge having received the message.
 	 *                Note, that if the promise is rejected by a timeout error. It may still get received.
 	 *                Default timeout is no timeout.
 	 */
-	(msg: Buffer, timeout?: number): Promise<void>;
+	(msg: Buffer, options?: PublishingOptions, timeout?: number): Promise<void>;
 
 	closePublisher(): void;
 }
@@ -70,9 +72,9 @@ export function createPublisher(
 	newPromise();
 	const subscription = createChannelObservable(connectionManager, connectionOpened, connectionClosed)
 		.pipe(
-			retryWhen((errors) => {
+			retryWhen(errors => {
 				return errors.pipe(
-					map((e) => {
+					map(e => {
 						newPromise();
 						return null;
 					}),
@@ -112,13 +114,14 @@ export function createPublisher(
 			const channel = await channelPromise;
 			try {
 				const success = channel.sendToQueue(publisherOptions.queueName, msg[0], {
+					...msg[1],
 					persistent: publisherOptions.persistent != null ? publisherOptions.persistent : true,
 				});
 				if (!success) {
 					messages.unshift(msg);
 					await waitFor(channel, 'drain');
 				} else {
-					msg[1]();
+					msg[2]();
 				}
 			} catch (e) {
 				if (!(e instanceof IllegalOperationError)) {
@@ -129,17 +132,22 @@ export function createPublisher(
 		}
 		deliveringMessages = false;
 	};
-	const messages: [Buffer, () => void, (err: Error) => void, boolean][] = [];
-	const publish = async (msg: Buffer, timeout?: number, removeOnTimeout = false): Promise<void> => {
+	const messages: [Buffer, PublishingOptions, () => void, (err: Error) => void, boolean][] = [];
+	const publish = async (
+		msg: Buffer,
+		options: PublishingOptions = {},
+		timeout?: number,
+		removeOnTimeout = false,
+	): Promise<void> => {
 		if (messages.length === maximumInMemoryQueueSize) {
 			throw new Error('Maxixmum in memory queue size exceeded');
 		}
 		if (done) {
 			throw new Error('Already closed');
 		}
-		let entry: [Buffer, () => void, (err: Error) => void, boolean] = null as any;
+		let entry: [Buffer, PublishingOptions, () => void, (err: Error) => void, boolean] = null as any;
 		const promise = new Promise<void>((resolve, reject) => {
-			entry = [msg, resolve, reject, true];
+			entry = [msg, options, resolve, reject, true];
 			messages.push(entry);
 		});
 
@@ -159,7 +167,7 @@ export function createPublisher(
 				const idx = messages.indexOf(entry);
 				const err = new TimeoutError('Message timed out after ' + timeout + ' milliseconds');
 				if (idx >= 0) {
-					entry[2](err);
+					entry[3](err);
 					messages.splice(idx, 1);
 				}
 				throw err;
