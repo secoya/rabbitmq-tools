@@ -168,6 +168,7 @@ export class ConnectionManager {
 			throw e;
 		}
 
+		conn.setMaxListeners(0);
 		conn.on('error', (err: Error) => {
 			this.onError(err);
 		});
