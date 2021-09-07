@@ -110,7 +110,7 @@ export class ConnectionManager {
 	}
 
 	private onDisconnect(err?: Error): void {
-		this.onDisconnectedCallbacks.forEach((v) => v(err));
+		this.onDisconnectedCallbacks.forEach(v => v(err));
 	}
 
 	private connectionOpened = () => {
@@ -132,7 +132,7 @@ export class ConnectionManager {
 			this.conn = null;
 			this.connected = false;
 			if (!this.isClosing) {
-				conn.close().catch((e) => {
+				conn.close().catch(e => {
 					// tslint:disable-next-line:no-console
 					console.error(e.stack);
 					process.exit(1);
@@ -142,7 +142,7 @@ export class ConnectionManager {
 	};
 
 	private triggerConnectedCallbacks(): void {
-		this.onConnectedCallbacks.forEach((v) => v());
+		this.onConnectedCallbacks.forEach(v => v());
 	}
 
 	private async connect(): Promise<amqplib.Connection> {
@@ -207,6 +207,22 @@ export class ConnectionManager {
 
 	public addQueueTopology(topology: QueueTopology): void {
 		this.queueTopology.push(topology);
+	}
+
+	public async assertTopology(topology: QueueTopology): Promise<void> {
+		const conn = await this.getConnection();
+		const ch = await conn.createChannel();
+		try {
+			const dlx = topology.deadLetterExchange || (topology.deadLetterRoutingKey != null ? '' : undefined);
+			await ch.assertQueue(topology.queueName, {
+				autoDelete: topology.autoDelete != null ? topology.autoDelete : true,
+				deadLetterExchange: dlx,
+				deadLetterRoutingKey: topology.deadLetterRoutingKey,
+				durable: topology.durable != null ? topology.durable : true,
+			});
+		} finally {
+			await ch.close();
+		}
 	}
 
 	public onConnected(cb: () => void): void {
