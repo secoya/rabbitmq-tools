@@ -1,6 +1,6 @@
 {
 	"name": "@secoya/rabbitmq-tools",
-	"version": "4.0.3",
+	"version": "4.0.4",
 	"description": "Tools for interfacing with RabbitMQ",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -17,14 +17,14 @@
 	},
 	"devDependencies": {
 		"jest": "25.3.0",
-		"prettier": "2.0.4",
+		"prettier": "2.4.0",
 		"ts-jest": "25.4.0",
 		"tslint": "6.1.1",
 		"typescript": "3.8.3"
 	},
 	"dependencies": {
-		"@types/amqplib": "0.5.13",
-		"amqplib": "0.5.5",
+		"@types/amqplib": "0.8.2",
+		"amqplib": "0.8.0",
 		"rxjs": "6.5.5"
 	}
 }

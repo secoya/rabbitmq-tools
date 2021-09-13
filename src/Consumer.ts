@@ -122,7 +122,11 @@ async function createConsumer(
 	ch.on('error', onChannelError);
 	ch.on('closed', onChannelClose);
 
-	const onMessage = (msg: amqplib.Message) => {
+	const onMessage = (msg: amqplib.Message | null) => {
+		if(msg == null) {
+			// https://github.com/DefinitelyTyped/DefinitelyTyped/pull/18361
+			return;
+		}
 		subscriber.next({
 			ack(allUpTo?: boolean) {
 				if (channel != null) {

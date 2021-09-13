@@ -54,21 +54,11 @@ function timer(
 	};
 }
 
-export interface QueueTopology {
+export interface QueueTopology extends amqplib.Options.AssertQueue {
 	queueName: string;
-	autoDelete?: boolean;
-	durable?: boolean;
-	/**
-	 * Specifies a dead letter exchange. Use this only to route to an actual exchange.
-	 * To route to a named queue, set deadLetterRoutingKey.
-	 */
-	deadLetterExchange?: string;
-
-	/**
-	 * Specifies a routing key for dead letters. If no exchange is specified, this equals,
-	 * to a queue name.
-	 */
-	deadLetterRoutingKey?: string;
+	// @types/amqplib doesn't define these, but they are legal options
+	overflow: 'drop-head' | 'reject-publish' | 'reject-publish-dlx';
+	queueMode: 'default' | 'lazy';
 }
 
 export class ConnectionManager {
@@ -193,7 +183,9 @@ export class ConnectionManager {
 					deadLetterExchange: dlx,
 					deadLetterRoutingKey: topology.deadLetterRoutingKey,
 					durable: topology.durable != null ? topology.durable : true,
-				});
+					overflow: topology.overflow,
+					queueMode: topology.queueMode,
+				} as amqplib.Options.AssertQueue);
 			}
 			await ch.close();
 		} catch (e) {
@@ -209,7 +201,7 @@ export class ConnectionManager {
 		this.queueTopology.push(topology);
 	}
 
-	public async assertTopology(topology: QueueTopology): Promise<void> {
+	public async assertQueueTopology(topology: QueueTopology): Promise<void> {
 		const conn = await this.getConnection();
 		const ch = await conn.createChannel();
 		try {
@@ -219,7 +211,9 @@ export class ConnectionManager {
 				deadLetterExchange: dlx,
 				deadLetterRoutingKey: topology.deadLetterRoutingKey,
 				durable: topology.durable != null ? topology.durable : true,
-			});
+				overflow: topology.overflow,
+				queueMode: topology.queueMode,
+			} as amqplib.Options.AssertQueue);
 		} finally {
 			await ch.close();
 		}
