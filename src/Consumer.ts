@@ -123,7 +123,7 @@ async function createConsumer(
 	ch.on('closed', onChannelClose);
 
 	const onMessage = (msg: amqplib.Message | null) => {
-		if(msg == null) {
+		if (msg == null) {
 			// https://github.com/DefinitelyTyped/DefinitelyTyped/pull/18361
 			return;
 		}
