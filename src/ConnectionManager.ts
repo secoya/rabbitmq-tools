@@ -10,29 +10,32 @@ export interface ConnectionOptions {
 	vhost: string;
 	user: string;
 	pass: string;
+	clientProperties?: { [key: string]: any };
 }
 
 function connect(opts: AmqplibOpts): Promise<amqplib.Connection> {
-	return amqplib.connect(opts as any) as any;
+	return amqplib.connect(opts);
 }
 
 interface AmqplibOpts {
 	hostname: string;
 	password: string;
-	port: string | number;
+	port: number;
 	protocol: 'amqp';
 	username: string;
 	vhost: string;
+	clientProperties?: { [key: string]: any };
 }
 
 function connectionOptsToAmqplibOpts(opts: ConnectionOptions): AmqplibOpts {
 	return {
 		hostname: opts.host,
 		password: opts.pass,
-		port: opts.port,
+		port: Number(opts.port),
 		protocol: 'amqp',
 		username: opts.user,
 		vhost: opts.vhost,
+		clientProperties: opts.clientProperties,
 	};
 }
 
