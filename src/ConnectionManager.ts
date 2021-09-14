@@ -4,39 +4,14 @@ import { retry } from 'rxjs/operators';
 import { consumeQueue, ConsumerOptions, Message } from './Consumer';
 import { createPublisher, Publisher, PublisherOptions } from './Publisher';
 
-export interface ConnectionOptions {
-	host: string;
-	port: string | number;
-	vhost: string;
-	user: string;
-	pass: string;
+export type ConnectionOptions = amqplib.Options.Connect & AmqplibSocketOpts;
+
+interface AmqplibSocketOpts {
+	noDelay?: boolean;
+	timeout?: number;
+	keepAlive?: boolean;
+	keepAliveDelay?: number;
 	clientProperties?: { [key: string]: any };
-}
-
-function connect(opts: AmqplibOpts): Promise<amqplib.Connection> {
-	return amqplib.connect(opts);
-}
-
-interface AmqplibOpts {
-	hostname: string;
-	password: string;
-	port: number;
-	protocol: 'amqp';
-	username: string;
-	vhost: string;
-	clientProperties?: { [key: string]: any };
-}
-
-function connectionOptsToAmqplibOpts(opts: ConnectionOptions): AmqplibOpts {
-	return {
-		hostname: opts.host,
-		password: opts.pass,
-		port: Number(opts.port),
-		protocol: 'amqp',
-		username: opts.user,
-		vhost: opts.vhost,
-		clientProperties: opts.clientProperties,
-	};
 }
 
 function timer(millis: number): {
@@ -142,7 +117,23 @@ export class ConnectionManager {
 		}
 		await this.connectionDelay;
 		this.connectionAttempts++;
-		const connectionPromise = connect(connectionOptsToAmqplibOpts(this.connectionOptions));
+		const connectionPromise = amqplib.connect(
+			{
+				hostname: this.connectionOptions.hostname,
+				password: this.connectionOptions.password,
+				port: this.connectionOptions.port,
+				protocol: 'amqp',
+				username: this.connectionOptions.username,
+				vhost: this.connectionOptions.vhost,
+			},
+			{
+				clientProperties: this.connectionOptions.clientProperties,
+				noDelay: this.connectionOptions.noDelay,
+				timeout: this.connectionOptions.timeout,
+				keepAlive: this.connectionOptions.keepAlive,
+				keepAliveDelay: this.connectionOptions.keepAliveDelay,
+			},
+		);
 
 		let conn: amqplib.Connection;
 		try {
