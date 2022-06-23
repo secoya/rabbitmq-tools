@@ -128,10 +128,10 @@ export class ConnectionManager {
 			},
 			{
 				clientProperties: this.connectionOptions.clientProperties,
-				noDelay: this.connectionOptions.noDelay,
-				timeout: this.connectionOptions.timeout,
 				keepAlive: this.connectionOptions.keepAlive,
 				keepAliveDelay: this.connectionOptions.keepAliveDelay,
+				noDelay: this.connectionOptions.noDelay,
+				timeout: this.connectionOptions.timeout,
 			},
 		);
 
