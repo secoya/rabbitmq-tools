@@ -19,7 +19,7 @@ function timer(millis: number): {
 	cancel: () => void;
 } {
 	let cancel: () => void = null as any;
-	const p = new Promise<void>((resolve, reject) => {
+	const p = new Promise<void>((resolve) => {
 		const timeout = setTimeout(resolve, millis);
 		cancel = () => clearTimeout(timeout);
 	});
@@ -142,7 +142,7 @@ export class ConnectionManager {
 			this.connected = true;
 			this.conn = conn;
 			this.triggerConnectedCallbacks();
-		} catch (e) {
+		} catch (e: any) {
 			const t = timer(Math.min(60 * 1000, Math.pow(2, this.connectionAttempts) * 1000));
 			this.connectionDelay = t.promise;
 			this.cancelReconnect = t.cancel;

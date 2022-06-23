@@ -32,7 +32,7 @@ export interface PublisherOptions {
 }
 
 function timer(millis: number): Promise<typeof TIMEOUT> {
-	return new Promise<typeof TIMEOUT>((resolve, reject) => {
+	return new Promise<typeof TIMEOUT>((resolve) => {
 		setTimeout(() => resolve(TIMEOUT), millis);
 	});
 }
@@ -60,21 +60,19 @@ export function createPublisher(
 ): Publisher {
 	const maximumInMemoryQueueSize = publisherOptions.maximumInMemoryQueueSize || 100;
 	let resolvePromise: (channel: amqplib.Channel) => void;
-	let rejectPromise: (err: Error) => void;
 	let done = false;
 	let channelPromise: Promise<amqplib.Channel>;
 	const newPromise = () => {
-		channelPromise = new Promise<amqplib.Channel>((resolve, reject) => {
+		channelPromise = new Promise<amqplib.Channel>((resolve) => {
 			resolvePromise = resolve;
-			rejectPromise = reject;
 		});
 	};
 	newPromise();
 	const subscription = createChannelObservable(connectionManager, connectionOpened, connectionClosed)
 		.pipe(
-			retryWhen(errors => {
+			retryWhen((errors) => {
 				return errors.pipe(
-					map(e => {
+					map(() => {
 						newPromise();
 						return null;
 					}),
@@ -133,12 +131,7 @@ export function createPublisher(
 		deliveringMessages = false;
 	};
 	const messages: [Buffer, PublishingOptions, () => void, (err: Error) => void, boolean][] = [];
-	const publish = async (
-		msg: Buffer,
-		options: PublishingOptions = {},
-		timeout?: number,
-		removeOnTimeout = false,
-	): Promise<void> => {
+	const publish = async (msg: Buffer, options: PublishingOptions = {}, timeout?: number): Promise<void> => {
 		if (messages.length === maximumInMemoryQueueSize) {
 			throw new Error('Maxixmum in memory queue size exceeded');
 		}

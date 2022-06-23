@@ -64,7 +64,7 @@ export function createChannelObservable(
 				});
 
 				subscriber.next(channel);
-			} catch (e) {
+			} catch (e: any) {
 				onClose(e);
 			}
 		};
