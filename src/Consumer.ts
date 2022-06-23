@@ -128,10 +128,9 @@ async function createConsumer(
 			return;
 		}
 		subscriber.next({
-			// @ts-ignore
 			ack(allUpTo?: boolean) {
 				if (channel != null) {
-					ch.ack(msg);
+					ch.ack(msg, allUpTo);
 				}
 			},
 			nack(requeue?: boolean, allUpTo?: boolean) {
