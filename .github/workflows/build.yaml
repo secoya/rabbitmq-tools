@@ -48,7 +48,7 @@ jobs:
     - name: Build the release
       uses: docker://node:14.18.2-alpine3.14
       with:
-        args: node_modules/.bin/tsc -p tsconfig.no-tests.json
+        args: node_modules/.bin/tsc -p tsconfig.json
     - name: Create compilation artifact
       run: tar -cf ../dist.tar *
       working-directory: dist
