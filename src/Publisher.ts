@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events';
 import amqplib from 'amqplib';
 import { Channel } from 'amqplib';
-import { IllegalOperationError } from 'amqplib/lib/error';
-import { flatMap, map, retryWhen } from 'rxjs/operators';
+import { IllegalOperationError } from 'amqplib/lib/error.js';
+import { flatMap, map, retryWhen } from 'rxjs/operators/index.js';
 import { createChannelObservable } from './ChannelManager.js';
 import { ConnectionManager } from './ConnectionManager.js';
 import { TimeoutError } from './TimeoutError.js';

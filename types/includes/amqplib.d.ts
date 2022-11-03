@@ -1,3 +1,3 @@
-declare module 'amqplib/lib/error' {
-	export class IllegalOperationError extends Error { }
+declare module 'amqplib/lib/error.js' {
+	export class IllegalOperationError extends Error {}
 }

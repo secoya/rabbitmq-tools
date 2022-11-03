@@ -30,5 +30,13 @@
 		"@secoya/context-helpers": "3.2.0",
 		"opentracing": "^0.14.7",
 		"tslib": "^2.4.0"
+	},
+	"peerDependenciesMeta": {
+		"@secoya/context-helpers": {
+			"optional": true
+		},
+		"opentracing": {
+			"optional": true
+		}
 	}
 }

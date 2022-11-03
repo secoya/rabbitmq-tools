@@ -1,6 +1,6 @@
 import * as amqplib from 'amqplib';
 import { Observable } from 'rxjs';
-import { retry } from 'rxjs/operators';
+import { retry } from 'rxjs/operators/index.js';
 import { consumeQueue, ConsumerOptions, Message } from './Consumer.js';
 import { createPublisher, Publisher, PublisherOptions } from './Publisher.js';
 
