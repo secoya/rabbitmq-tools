@@ -5,6 +5,7 @@
 	"author": "Kaare Hoff Skovgaard <khs@secoya.dk>",
 	"license": "MIT",
 	"type": "module",
+	"private": true,
 	"prettier": "@secoya/prettier-config",
 	"devDependencies": {
 		"@orbit-online/git-release": "0.2.0",
@@ -21,6 +22,7 @@
 		"typescript": "4.8.4"
 	},
 	"dependencies": {
+		"@types/amqplib": "0.8.2",
 		"amqplib": "0.8.0",
 		"rxjs": "6.5.5"
 	},
