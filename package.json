@@ -1,22 +1,32 @@
 {
 	"name": "@secoya/rabbitmq-tools",
 	"description": "Tools for interfacing with RabbitMQ",
-	"main": "index.js",
-	"types": "index.d.ts",
 	"repository": "https://github.com/secoya/rabbitmq-tools",
 	"author": "Kaare Hoff Skovgaard <khs@secoya.dk>",
 	"license": "MIT",
+	"type": "module",
+	"prettier": "@secoya/prettier-config",
 	"devDependencies": {
 		"@orbit-online/git-release": "0.2.0",
-		"prettier": "2.3.2",
-		"tslib": "2.4.0",
-		"tslint": "5.10.0",
-		"tslint-secoya": "2.1.5",
-		"typescript": "4.0.2"
+		"@rushstack/eslint-patch": "1.2.0",
+		"@secoya/context-helpers": "3.2.0",
+		"@secoya/eslint-plugin-orbit": "1.1.3",
+		"@secoya/nodejs-build-tools": "3.2.2",
+		"@secoya/prettier-config": "1.0.0",
+		"@types/amqplib": "0.8.2",
+		"eslint": "8.25.0",
+		"opentracing": "0.14.7",
+		"prettier": "2.7.1",
+		"tslib": "2.4.1",
+		"typescript": "4.8.4"
 	},
 	"dependencies": {
-		"@types/amqplib": "0.8.2",
 		"amqplib": "0.8.0",
 		"rxjs": "6.5.5"
+	},
+	"peerDependencies": {
+		"@secoya/context-helpers": "3.2.0",
+		"opentracing": "^0.14.7",
+		"tslib": "^2.4.0"
 	}
 }

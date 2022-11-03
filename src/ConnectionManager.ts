@@ -1,8 +1,8 @@
 import * as amqplib from 'amqplib';
 import { Observable } from 'rxjs';
 import { retry } from 'rxjs/operators';
-import { consumeQueue, ConsumerOptions, Message } from './Consumer';
-import { createPublisher, Publisher, PublisherOptions } from './Publisher';
+import { consumeQueue, ConsumerOptions, Message } from './Consumer.js';
+import { createPublisher, Publisher, PublisherOptions } from './Publisher.js';
 
 export type ConnectionOptions = amqplib.Options.Connect & AmqplibSocketOpts;
 
@@ -99,7 +99,7 @@ export class ConnectionManager {
 			this.connected = false;
 			if (!this.isClosing) {
 				conn.close().catch((e) => {
-					// tslint:disable-next-line:no-console
+					// eslint-disable-next-line no-console
 					console.error(e.stack);
 					process.exit(1);
 				});
@@ -181,7 +181,7 @@ export class ConnectionManager {
 			}
 			await ch.close();
 		} catch (e) {
-			// tslint:disable-next-line:no-console
+			// eslint-disable-next-line no-console
 			console.error(e);
 			process.exit(1);
 		}

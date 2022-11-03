@@ -1,26 +1,7 @@
 {
+	"extends": "@secoya/nodejs-build-tools/tsconfig.library.json",
 	"compilerOptions": {
-		"target": "es2018",
-		"module": "commonjs",
-		"lib": ["es2018"],
-		"importHelpers": true,
-		"allowUnreachableCode": false,
-		"allowUnusedLabels": false,
-		"strict": true,
-		"noImplicitAny": true,
-		"strictNullChecks": true,
-		"declaration": true,
-		"declarationMap": true,
-		"sourceMap": true,
-		"skipLibCheck": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noImplicitReturns": true,
-		"noFallthroughCasesInSwitch": true,
-		"moduleResolution": "node",
-		"outDir": "dist",
-		"rootDir": "src",
-		"baseUrl": ".",
+		"outDir": "dist"
 	},
-	"include": ["src/*.ts", "src/**/*.ts", "types/includes/*.d.ts"]
+	"include": ["src/**/*.ts", "types/includes/**/*.d.ts"]
 }

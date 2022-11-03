@@ -1,7 +1,7 @@
 import * as amqplib from 'amqplib';
 import * as RxJS from 'rxjs';
-import { ConnectionClosedError } from './ConnectionClosedError';
-import { ConnectionManager } from './ConnectionManager';
+import { ConnectionClosedError } from './ConnectionClosedError.js';
+import { ConnectionManager } from './ConnectionManager.js';
 
 export interface ConsumerOptions {
 	prefetch?: number;
@@ -55,7 +55,7 @@ async function createConsumer(
 				.cancel(consumerTag)
 				.then(onConnectionClosed)
 				.catch((e) => {
-					// tslint:disable-next-line:no-console
+					// eslint-disable-next-line no-console
 					console.error('Unhooking consumer error', e);
 					process.exit(1);
 				});
@@ -185,7 +185,7 @@ export function consumeQueue(
 			subscriber,
 			onClose,
 		).catch((e: Error) => {
-			// tslint:disable-next-line:no-console
+			// eslint-disable-next-line no-console
 			console.error('Create consumer error', e.stack);
 			process.exit(1);
 		});

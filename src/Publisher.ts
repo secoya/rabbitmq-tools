@@ -1,11 +1,11 @@
-import * as amqplib from 'amqplib';
+import { EventEmitter } from 'events';
+import amqplib from 'amqplib';
 import { Channel } from 'amqplib';
 import { IllegalOperationError } from 'amqplib/lib/error';
-import { EventEmitter } from 'events';
 import { flatMap, map, retryWhen } from 'rxjs/operators';
-import { createChannelObservable } from './ChannelManager';
-import { ConnectionManager } from './ConnectionManager';
-import { TimeoutError } from './TimeoutError';
+import { createChannelObservable } from './ChannelManager.js';
+import { ConnectionManager } from './ConnectionManager.js';
+import { TimeoutError } from './TimeoutError.js';
 
 type PublishingOptions = Omit<amqplib.Options.Publish, 'persistent'>;
 export interface Publisher {
@@ -63,6 +63,7 @@ export function createPublisher(
 	let done = false;
 	let channelPromise: Promise<amqplib.Channel>;
 	const newPromise = () => {
+		// eslint-disable-next-line @secoya/orbit/proper-promise-use, @typescript-eslint/tslint/config
 		channelPromise = new Promise<amqplib.Channel>((resolve) => {
 			resolvePromise = resolve;
 		});
@@ -84,7 +85,7 @@ export function createPublisher(
 
 					return ch;
 				} catch (e) {
-					// tslint:disable-next-line:no-console
+					// eslint-disable-next-line no-console
 					console.error(e);
 					process.exit(1);
 				}
@@ -92,9 +93,9 @@ export function createPublisher(
 		)
 		.subscribe({
 			error: (e: Error) => {
-				// tslint:disable-next-line:no-console
+				// eslint-disable-next-line no-console
 				console.error('Unknown error');
-				// tslint:disable-next-line:no-console
+				// eslint-disable-next-line no-console
 				console.error(e.stack);
 				process.exit(1);
 			},
@@ -139,6 +140,7 @@ export function createPublisher(
 			throw new Error('Already closed');
 		}
 		let entry: [Buffer, PublishingOptions, () => void, (err: Error) => void, boolean] = null as any;
+		// eslint-disable-next-line @typescript-eslint/tslint/config
 		const promise = new Promise<void>((resolve, reject) => {
 			entry = [msg, options, resolve, reject, true];
 			messages.push(entry);
@@ -146,7 +148,7 @@ export function createPublisher(
 
 		if (!deliveringMessages) {
 			deliver().catch((e: Error) => {
-				// tslint:disable-next-line:no-console
+				// eslint-disable-next-line no-console
 				console.error(e);
 				process.exit(1);
 			});
@@ -155,6 +157,7 @@ export function createPublisher(
 		if (timeout) {
 			const timeoutPromise = timer(timeout);
 
+			// eslint-disable-next-line @secoya/orbit/proper-promise-use
 			const winner = await Promise.race([promise, timeoutPromise]);
 			if (winner === TIMEOUT) {
 				const idx = messages.indexOf(entry);
