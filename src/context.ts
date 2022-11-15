@@ -1,6 +1,5 @@
 import type { Span } from 'opentracing';
 import type amqplib from 'amqplib';
-import type opentracingType from 'opentracing';
 import { ContextCreator } from '@secoya/context-helpers/assignment.js';
 import { FullLogContext, LogContext, RootLogContext } from '@secoya/context-helpers/log.js';
 import { ServiceNameContext } from '@secoya/context-helpers/servicename.js';
@@ -16,13 +15,19 @@ import {
 	TracerContext,
 } from '@secoya/context-helpers/trace.js';
 import { MaybeContext } from '@secoya/context-helpers/utils.js';
-import { ConnectionManager, ConnectionOptions } from './ConnectionManager.js';
-import { Message } from './Consumer.js';
-import { Publisher } from './Publisher.js';
+import { ConnectionManager, ConnectionOptions, Message, Publisher } from './index.js';
 
-// The value & function are dynamically imported in connectToRabbitMQ to avoid an opentracing
-// import error if it is not installed.
-let opentracing: typeof opentracingType;
+const opentracing = await (async () => {
+	try {
+		return await import('opentracing');
+	} catch (e) {
+		if (e instanceof Error && (e as any).code === 'ERR_MODULE_NOT_FOUND') {
+			return e;
+		} else {
+			throw e;
+		}
+	}
+})();
 
 export interface RabbitMQContext {
 	readonly rabbitmq: ConnectionManager;
@@ -45,10 +50,6 @@ export async function setupRabbitMQ(
 	options: RabbitMQOptions = {},
 ): Promise<RabbitMQContext> {
 	log.verbose('connect to rabbitmq');
-	try {
-		opentracing = await import('opentracing');
-		// eslint-disable-next-line no-empty
-	} catch (e) {}
 	const rabbitmq = new ConnectionManager({
 		hostname: options.hostname ?? process.env.RABBITMQ_HOST,
 		port: options.port ?? (process.env.RABBITMQ_PORT ? Number(process.env.RABBITMQ_PORT) : undefined),
@@ -88,6 +89,9 @@ export function createRabbitMQConsumerWrapper<Destination extends FullLogContext
 			return (message: Message) => {
 				const [_spanOptions, _fn] = buildSpanOptions(spanOptionsOrFn, fn);
 				if (isTracerContext(source)) {
+					if (opentracing instanceof Error) {
+						throw opentracing;
+					}
 					const { tracer } = source;
 					const parentSpanContext = tracer.extract(
 						opentracing.FORMAT_HTTP_HEADERS,
@@ -124,6 +128,9 @@ export function createRabbitMQPublisherWrapper(
 		wrapRabbitMQPublisher: (publisher: Publisher) => {
 			const wrappedPublisher = (msg: Buffer, options: PublishingOptions = {}, timeout?: number) => {
 				if (isTraceContext(destination)) {
+					if (opentracing instanceof Error) {
+						throw opentracing;
+					}
 					const { extendWithSpanId } = destination;
 					options.headers = extendWithSpanId(options.headers ?? {}, opentracing.FORMAT_HTTP_HEADERS);
 					return publisher(msg, options, timeout);
