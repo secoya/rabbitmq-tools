@@ -61,11 +61,8 @@ jobs:
     - name: Get release notes from tag
       id: tag-message
       run: |
-        MESSAGE=$(git tag -l --format='%(contents)' "${REF#refs\/tags\/}")
-        MESSAGE=${MESSAGE//'%'/'%25'}
-        MESSAGE=${MESSAGE//$'\n'/'%0A'}
-        MESSAGE=${MESSAGE//$'\r'/'%0D'}
-        printf "message=%s\n" "$MESSAGE" >> $GITHUB_OUTPUT
+        eof="$(openssl rand -hex 8)"
+        printf "message<<%s\n%s\n%s\n" "$eof" "$(git tag -l --format='%(contents)' "${REF#refs\/tags\/}")" "$eof" >> $GITHUB_OUTPUT
       env:
         REF: ${{ github.ref }}
     - uses: actions/download-artifact@v3
