@@ -45,10 +45,10 @@ export interface RabbitMQPublisherWrapperContext {
 	readonly wrapRabbitMQPublisher: RabbitMQPublisherWrapper;
 }
 
-export async function setupRabbitMQ(
+export function setupRabbitMQContext(
 	{ log, rootLog, serviceName, shutdown }: ServiceNameContext & ShutdownHandlingContext & RootLogContext & LogContext,
 	options: RabbitMQOptions = {},
-): Promise<RabbitMQContext> {
+): RabbitMQContext {
 	log.verbose('connect to rabbitmq');
 	const rabbitmq = new ConnectionManager({
 		hostname: options.hostname ?? process.env.RABBITMQ_HOST,
