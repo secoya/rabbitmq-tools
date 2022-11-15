@@ -12,7 +12,7 @@
 		"@rushstack/eslint-patch": "1.2.0",
 		"@secoya/context-helpers": "3.2.0",
 		"@secoya/eslint-plugin-orbit": "1.1.3",
-		"@secoya/nodejs-build-tools": "3.2.2",
+		"@secoya/nodejs-build-tools": "3.4.3",
 		"@secoya/prettier-config": "1.0.0",
 		"@types/amqplib": "0.8.2",
 		"eslint": "8.25.0",
