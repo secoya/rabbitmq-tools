@@ -1,8 +1,7 @@
 {
 	"extends": "@secoya/nodejs-build-tools/tsconfig.library.json",
 	"compilerOptions": {
-		"target": "ESNext",
-		"outDir": "dist"
+		"target": "ESNext"
 	},
-	"include": ["src/**/*.ts", "types/includes/**/*.d.ts"]
+	"include": ["src/**/*.ts", "types/includes/**/*.d.ts", "tsup.config.ts"]
 }

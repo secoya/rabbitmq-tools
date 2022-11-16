@@ -3,17 +3,14 @@
 # so this script must be POSIX sh compliant
 
 set -e
-PKGROOT=$(cd "$(dirname "$0")/.." && echo "$PWD")
-PATH=$PKGROOT/node_modules/.bin:$PATH
+cd "$(dirname "$0")/.."
+PATH=$PWD/node_modules/.bin:$PATH
+export LOGFORMAT=cli
 
 main() {
-  rm -rf "$PKGROOT/dist"
-  mkdir "$PKGROOT/dist"
   prettier --check src
-  esbuild-wrapper --no-bundle "$PKGROOT/src/context.ts"
-  esbuild-wrapper "$PKGROOT/src/index.ts"
-  eslint "$PKGROOT/src"
-  tsc -p "$PKGROOT/tsconfig.build.json"
+  eslint src
+  tsup-node --config tsup.config.ts src/index.ts src/context.ts
 }
 
 main "$@"
