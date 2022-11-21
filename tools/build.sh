@@ -10,7 +10,7 @@ export LOGFORMAT=cli
 main() {
   prettier --check src
   eslint src
-  tsup-node --config tsup.config.ts src/index.ts src/context.ts
+  tsup --config tsup.config.ts src/index.ts src/context.ts
 }
 
 main "$@"
