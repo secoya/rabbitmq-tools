@@ -3,3 +3,4 @@ export * from './ConnectionManager.js';
 export * from './Consumer.js';
 export * from './Publisher.js';
 export * from './TimeoutError.js';
+export * from './context.js';

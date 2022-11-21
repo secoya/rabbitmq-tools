@@ -17,11 +17,6 @@
 			"import": "./index.js",
 			"require": "./index.cjs",
 			"types": "./index.d.ts"
-		},
-		"./context.js": {
-			"import": "./context.js",
-			"require": "./context.cjs",
-			"types": "./context.d.ts"
 		}
 	},
 	"devDependencies": {

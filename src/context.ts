@@ -15,7 +15,9 @@ import {
 	TracerContext,
 } from '@secoya/context-helpers/trace.js';
 import { MaybeContext } from '@secoya/context-helpers/utils.js';
-import { ConnectionManager, ConnectionOptions, Message, Publisher } from './index.js';
+import { ConnectionManager, ConnectionOptions } from './ConnectionManager.js';
+import { Message } from './Consumer.js';
+import { Publisher } from './Publisher.js';
 
 const opentracing = await (async () => {
 	try {
