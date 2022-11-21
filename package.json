@@ -4,9 +4,26 @@
 	"repository": "https://github.com/secoya/rabbitmq-tools",
 	"author": "Kaare Hoff Skovgaard <khs@secoya.dk>",
 	"license": "MIT",
-	"type": "module",
 	"private": true,
+	"type": "module",
 	"prettier": "@secoya/prettier-config",
+	"scripts": {
+		"build": "tools/build.sh"
+	},
+	"main": "./index.cjs",
+	"types": "./index.d.ts",
+	"exports": {
+		".": {
+			"import": "./index.js",
+			"require": "./index.cjs",
+			"types": "./index.d.ts"
+		},
+		"./context.js": {
+			"import": "./context.js",
+			"require": "./context.cjs",
+			"types": "./context.d.ts"
+		}
+	},
 	"devDependencies": {
 		"@orbit-online/git-release": "^0.2.0",
 		"@rushstack/eslint-patch": "1.2.0",
