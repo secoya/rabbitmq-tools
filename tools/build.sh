@@ -11,6 +11,7 @@ main() {
   prettier --check src
   eslint src
   tsup --config tsup.config.ts src/index.ts
+  check-imports dist/*.js
 }
 
 main "$@"
