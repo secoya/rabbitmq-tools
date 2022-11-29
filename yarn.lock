@@ -111,6 +111,14 @@
     "@colors/colors" "1.5.0"
     winston "3.3.3"
 
+"@secoya/context-helpers@3.4.12":
+  version "3.4.12"
+  resolved "https://registry.yarnpkg.com/@secoya/context-helpers/-/context-helpers-3.4.12.tgz#5aa71d5b775bc3f2978f935f023a4480c03c270d"
+  integrity sha512-4kNQy5dFAmNH8GAwEWez5RHdC4bgeB6DUe7Dr2rxRCszd8pLkhAhq+qCpbB4c1ZloalNKiez2zUz4sNObbDuQw==
+  dependencies:
+    "@colors/colors" "1.5.0"
+    winston "3.3.3"
+
 "@secoya/eslint-plugin-orbit@1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@secoya/eslint-plugin-orbit/-/eslint-plugin-orbit-1.1.3.tgz#f240ccbea51c2111e826b313b46b41aeb3cfc10b"

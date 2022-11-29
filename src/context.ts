@@ -106,6 +106,10 @@ export function createRabbitMQConsumerWrapper<Destination extends FullLogContext
 					} else {
 						span = createSpan(tracer, { ..._spanOptions, relation: 'new' });
 					}
+					span.addTags({
+						'initiator.transport': 'rabbitmq',
+						'initiator.method': 'wrapRabbitMQConsumer',
+					});
 					const { containErrors } = destinationCreator({ span });
 					return containErrors(_spanOptions.name, (dst) => traceFn(span, _fn, dst, message));
 				} else {
