@@ -1,11 +1,11 @@
-import { EventEmitter } from 'events';
-import amqplib from 'amqplib';
-import { Channel } from 'amqplib';
-import { IllegalOperationError } from 'amqplib/lib/error.js';
-import { flatMap, map, retryWhen } from 'rxjs/operators/index.js';
 import { createChannelObservable } from './ChannelManager.js';
 import { ConnectionManager } from './ConnectionManager.js';
 import { TimeoutError } from './TimeoutError.js';
+import amqplib from 'amqplib';
+import { Channel } from 'amqplib';
+import { IllegalOperationError } from 'amqplib/lib/error.js';
+import { EventEmitter } from 'events';
+import { flatMap, map, retryWhen } from 'rxjs/operators/index.js';
 
 type PublishingOptions = Omit<amqplib.Options.Publish, 'persistent'>;
 export interface Publisher {
@@ -26,9 +26,9 @@ export interface Publisher {
 const TIMEOUT = -1;
 
 export interface PublisherOptions {
-	queueName: string;
-	persistent?: boolean;
 	maximumInMemoryQueueSize?: number;
+	persistent?: boolean;
+	queueName: string;
 }
 
 function timer(millis: number): Promise<typeof TIMEOUT> {

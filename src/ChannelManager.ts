@@ -1,7 +1,7 @@
-import * as amqplib from 'amqplib';
-import { Observable } from 'rxjs';
 import { ConnectionClosedError } from './ConnectionClosedError.js';
 import { ConnectionManager } from './ConnectionManager.js';
+import * as amqplib from 'amqplib';
+import { Observable } from 'rxjs';
 
 export function createChannelObservable(
 	connectionManager: ConnectionManager,

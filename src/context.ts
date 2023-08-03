@@ -1,5 +1,6 @@
-import type { Span } from 'opentracing';
-import type amqplib from 'amqplib';
+import { ConnectionManager, ConnectionOptions } from './ConnectionManager.js';
+import { Message } from './Consumer.js';
+import { Publisher } from './Publisher.js';
 import { ContextCreator } from '@secoya/context-helpers/assignment.js';
 import { FullLogContext, LogContext, RootLogContext } from '@secoya/context-helpers/log.js';
 import { ServiceNameContext } from '@secoya/context-helpers/servicename.js';
@@ -15,9 +16,8 @@ import {
 	TracerContext,
 } from '@secoya/context-helpers/trace.js';
 import { MaybeContext } from '@secoya/context-helpers/utils.js';
-import { ConnectionManager, ConnectionOptions } from './ConnectionManager.js';
-import { Message } from './Consumer.js';
-import { Publisher } from './Publisher.js';
+import type amqplib from 'amqplib';
+import type { Span } from 'opentracing';
 
 const opentracing = await (async () => {
 	try {

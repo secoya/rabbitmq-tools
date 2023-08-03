@@ -1,22 +1,22 @@
+import { consumeQueue, ConsumerOptions, Message } from './Consumer.js';
+import { createPublisher, Publisher, PublisherOptions } from './Publisher.js';
 import * as amqplib from 'amqplib';
 import { Observable } from 'rxjs';
 import { retry } from 'rxjs/operators/index.js';
-import { consumeQueue, ConsumerOptions, Message } from './Consumer.js';
-import { createPublisher, Publisher, PublisherOptions } from './Publisher.js';
 
 export type ConnectionOptions = amqplib.Options.Connect & AmqplibSocketOpts;
 
 interface AmqplibSocketOpts {
-	noDelay?: boolean;
-	timeout?: number;
+	clientProperties?: { [key: string]: any };
 	keepAlive?: boolean;
 	keepAliveDelay?: number;
-	clientProperties?: { [key: string]: any };
+	noDelay?: boolean;
+	timeout?: number;
 }
 
 function timer(millis: number): {
-	promise: Promise<void>;
 	cancel: () => void;
+	promise: Promise<void>;
 } {
 	let cancel: () => void = null as any;
 	const p = new Promise<void>((resolve) => {
@@ -31,24 +31,31 @@ function timer(millis: number): {
 }
 
 export interface QueueTopology extends amqplib.Options.AssertQueue {
-	queueName: string;
 	// @types/amqplib doesn't define these, but they are legal options
 	overflow?: 'drop-head' | 'reject-publish' | 'reject-publish-dlx';
 	queueMode?: 'default' | 'lazy';
+	queueName: string;
 }
 
 export class ConnectionManager {
-	private connectionOptions: ConnectionOptions;
-	private connection: Promise<amqplib.Connection> | null;
+	public get isConnected(): boolean {
+		return this.connected;
+	}
+
+	public get isDisconnecting(): boolean {
+		return this.isClosing;
+	}
+	private cancelReconnect: () => void;
 	private conn: amqplib.Connection | null;
-	private openConnections: number;
 	private connected: boolean;
+	private connection: Promise<amqplib.Connection> | null;
+	private connectionAttempts: number;
+	private connectionDelay: Promise<void>;
+	private connectionOptions: ConnectionOptions;
 	private isClosing: boolean;
 	private onConnectedCallbacks: (() => void)[];
 	private onDisconnectedCallbacks: ((err?: Error) => void)[];
-	private connectionAttempts: number;
-	private cancelReconnect: () => void;
-	private connectionDelay: Promise<void>;
+	private openConnections: number;
 	private queueTopology: QueueTopology[];
 
 	public constructor(connectionOptions: ConnectionOptions) {
@@ -64,51 +71,6 @@ export class ConnectionManager {
 		this.cancelReconnect = () => void 0;
 		this.connectionDelay = Promise.resolve();
 		this.queueTopology = [];
-	}
-
-	private onError(err: Error): void {
-		this.connection = null;
-		this.conn = null;
-		this.openConnections = 0;
-		this.connected = false;
-		this.isClosing = false;
-		this.onDisconnect(err);
-	}
-
-	private onDisconnect(err?: Error): void {
-		this.onDisconnectedCallbacks.forEach((v) => v(err));
-	}
-
-	private connectionOpened = () => {
-		this.openConnections++;
-	};
-
-	private connectionClosed = () => {
-		if (!this.connected) {
-			return;
-		}
-		if (this.openConnections === 0) {
-			throw new Error('Cannot close a connection with 0 open connections');
-		}
-		this.openConnections--;
-
-		if (this.openConnections === 0) {
-			const conn = this.conn as amqplib.Connection;
-			this.connection = null;
-			this.conn = null;
-			this.connected = false;
-			if (!this.isClosing) {
-				conn.close().catch((e) => {
-					// eslint-disable-next-line no-console
-					console.error(e.stack);
-					process.exit(1);
-				});
-			}
-		}
-	};
-
-	private triggerConnectedCallbacks(): void {
-		this.onConnectedCallbacks.forEach((v) => v());
 	}
 
 	private async connect(): Promise<amqplib.Connection> {
@@ -189,6 +151,51 @@ export class ConnectionManager {
 		return conn;
 	}
 
+	private connectionClosed = () => {
+		if (!this.connected) {
+			return;
+		}
+		if (this.openConnections === 0) {
+			throw new Error('Cannot close a connection with 0 open connections');
+		}
+		this.openConnections--;
+
+		if (this.openConnections === 0) {
+			const conn = this.conn as amqplib.Connection;
+			this.connection = null;
+			this.conn = null;
+			this.connected = false;
+			if (!this.isClosing) {
+				conn.close().catch((e) => {
+					// eslint-disable-next-line no-console
+					console.error(e.stack);
+					process.exit(1);
+				});
+			}
+		}
+	};
+
+	private connectionOpened = () => {
+		this.openConnections++;
+	};
+
+	private onDisconnect(err?: Error): void {
+		this.onDisconnectedCallbacks.forEach((v) => v(err));
+	}
+
+	private onError(err: Error): void {
+		this.connection = null;
+		this.conn = null;
+		this.openConnections = 0;
+		this.connected = false;
+		this.isClosing = false;
+		this.onDisconnect(err);
+	}
+
+	private triggerConnectedCallbacks(): void {
+		this.onConnectedCallbacks.forEach((v) => v());
+	}
+
 	public addQueueTopology(topology: QueueTopology): void {
 		this.queueTopology.push(topology);
 	}
@@ -211,20 +218,19 @@ export class ConnectionManager {
 		}
 	}
 
-	public onConnected(cb: () => void): void {
-		this.onConnectedCallbacks.push(cb);
-	}
-
-	public onDisconnected(cb: (err?: Error) => void): void {
-		this.onDisconnectedCallbacks.push(cb);
-	}
-
-	public getConnection(): Promise<amqplib.Connection> {
-		if (this.connection != null) {
-			return this.connection;
+	public async close(): Promise<void> {
+		if (this.isClosing) {
+			throw new Error('Already closing');
 		}
-		this.connection = this.connect();
-		return this.connection;
+		this.cancelReconnect();
+		if (!this.connected) {
+			return;
+		}
+		const conn = this.conn as amqplib.Connection;
+		this.isClosing = true;
+		await conn.close();
+		this.isClosing = false;
+		return;
 	}
 
 	public consumeQueue(opts: ConsumerOptions, reconnectOnFailure: boolean = true): Observable<Message> {
@@ -244,26 +250,19 @@ export class ConnectionManager {
 		return createPublisher(this, this.connectionOpened, this.connectionClosed, opts);
 	}
 
-	public get isConnected(): boolean {
-		return this.connected;
+	public getConnection(): Promise<amqplib.Connection> {
+		if (this.connection != null) {
+			return this.connection;
+		}
+		this.connection = this.connect();
+		return this.connection;
 	}
 
-	public get isDisconnecting(): boolean {
-		return this.isClosing;
+	public onConnected(cb: () => void): void {
+		this.onConnectedCallbacks.push(cb);
 	}
 
-	public async close(): Promise<void> {
-		if (this.isClosing) {
-			throw new Error('Already closing');
-		}
-		this.cancelReconnect();
-		if (!this.connected) {
-			return;
-		}
-		const conn = this.conn as amqplib.Connection;
-		this.isClosing = true;
-		await conn.close();
-		this.isClosing = false;
-		return;
+	public onDisconnected(cb: (err?: Error) => void): void {
+		this.onDisconnectedCallbacks.push(cb);
 	}
 }

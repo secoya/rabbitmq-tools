@@ -1,7 +1,7 @@
-import * as amqplib from 'amqplib';
-import * as RxJS from 'rxjs';
 import { ConnectionClosedError } from './ConnectionClosedError.js';
 import { ConnectionManager } from './ConnectionManager.js';
+import * as amqplib from 'amqplib';
+import * as RxJS from 'rxjs';
 
 export interface ConsumerOptions {
 	prefetch?: number;
