@@ -98,12 +98,24 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
   integrity sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==
 
-"@secoya/context-helpers@4.1.1":
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/@secoya/context-helpers/-/context-helpers-4.1.1.tgz#8589a500bdc404cab67b1c76e0c6c3fd1501e497"
-  integrity sha512-XN76lW5y8j1I1CEhh7P7GbDlcMYCcL6waFcIwlwi06TAv4bMeI6of+GxzYmxSfHTbVxFIrxsgumU6g4ORoC5Pw==
+"@secoya/context-helpers@5.1.3":
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/@secoya/context-helpers/-/context-helpers-5.1.3.tgz#92d4e13c494f5536e36256de5fd06d06d05b7ace"
+  integrity sha512-UAOGzF7vPSNJk5um9Kpi7w9yLCdPO5HzYhPe94+0GwBJfOWnr790Dt87xOHJrneeMip5E0smOy7J34knQ28twA==
   dependencies:
     "@colors/colors" "1.5.0"
+    ip-address "8.1.0"
+    node-fetch "3.3.2"
+    winston "3.3.3"
+
+"@secoya/context-helpers@5.1.4":
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/@secoya/context-helpers/-/context-helpers-5.1.4.tgz#6196be27d96a2e7cd2dd2deff37f49f0162d2ffe"
+  integrity sha512-FQ+ycZrKnWqbNh4qnP+d6/XlPGpijWZFiE+yUhLxuseWglsPzQq5W61ZDXM2Lf8feygjdznMDgMUrVLljj/xmQ==
+  dependencies:
+    "@colors/colors" "1.5.0"
+    ip-address "8.1.0"
+    node-fetch "3.3.2"
     winston "3.3.3"
 
 "@secoya/eslint-plugin-orbit@2.0.2":
@@ -127,20 +139,20 @@
     tslint-secoya "2.3.1"
     typescript "4.8.4"
 
-"@secoya/graphql-fragment-type-generator@3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@secoya/graphql-fragment-type-generator/-/graphql-fragment-type-generator-3.0.3.tgz#20559d9c2042400357b7f0d0b67837d0532f56ba"
-  integrity sha512-TiyLYRDCxkoxN1osfxJ9V3wbfwGrxihO/jL0I6sr14TWkfk9eCNCwFeH0vd6q3CQExdMWWVCIoBRccHBkpnThA==
+"@secoya/graphql-fragment-type-generator@3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@secoya/graphql-fragment-type-generator/-/graphql-fragment-type-generator-3.0.4.tgz#7c7f5e26a678f7482dc3ff0e53f3e7cdcd13ef85"
+  integrity sha512-nnPGXeOpaIUo1BnwuIOeC9yafkZNSzBuclN+nw4BtUGlfO+9F4I9zev6548AJD+RfeqiHjVLP/GOWVeri5j+ag==
   dependencies:
     aggregate-error "1.0.0"
 
-"@secoya/nodejs-build-tools@4.1.17":
-  version "4.1.17"
-  resolved "https://registry.yarnpkg.com/@secoya/nodejs-build-tools/-/nodejs-build-tools-4.1.17.tgz#d92d0251d70365a9f73f48e8e39c28d19fc6c453"
-  integrity sha512-RuHhaeXly75SIw4OMRC+LjVqk+LYXkbg9dEz5ipRXBWpP/O7yIsjbZgZ1OJ5SPysAs9SyFSXHMmWvvT5o6eBbg==
+"@secoya/nodejs-build-tools@5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@secoya/nodejs-build-tools/-/nodejs-build-tools-5.0.1.tgz#e233cfe1d18e6a118ec79a4b8ac5421739b3a552"
+  integrity sha512-fOV75mvO5deMyO3jKuXmGfWnFkEdDg76Oc8SBPup0fvTBhfjAXbQZJEK2W93cc0jMoXHW16iCkkDG62Os4HhZw==
   dependencies:
-    "@secoya/context-helpers" "4.1.1"
-    "@secoya/graphql-fragment-type-generator" "3.0.3"
+    "@secoya/context-helpers" "5.1.3"
+    "@secoya/graphql-fragment-type-generator" "3.0.4"
     chokidar "3.5.3"
     docopt "0.6.2"
     glob "7.1.2"
@@ -668,6 +680,11 @@ cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
+
+data-uri-to-buffer@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-4.0.1.tgz#d8feb2b2881e6a4f58c2e08acfd0e2834e26222e"
+  integrity sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==
 
 debug@^3.2.7:
   version "3.2.7"
@@ -1199,6 +1216,14 @@ fecha@^4.2.0:
   resolved "https://registry.yarnpkg.com/fecha/-/fecha-4.2.3.tgz#4d9ccdbc61e8629b259fdca67e65891448d569fd"
   integrity sha512-OP2IUU6HeYKJi3i0z4A19kHMQoLVs4Hc+DPqqxI2h/DPZHTm/vjsfC6P0b4jCMy14XizLBqvndQ+UilD7707Jw==
 
+fetch-blob@^3.1.2, fetch-blob@^3.1.4:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/fetch-blob/-/fetch-blob-3.2.0.tgz#f09b8d4bbd45adc6f0c20b7e787e793e309dcce9"
+  integrity sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==
+  dependencies:
+    node-domexception "^1.0.0"
+    web-streams-polyfill "^3.0.3"
+
 file-entry-cache@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/file-entry-cache/-/file-entry-cache-6.0.1.tgz#211b2dd9659cb0394b073e7323ac3c933d522027"
@@ -1238,6 +1263,13 @@ fn.name@1.x.x:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/fn.name/-/fn.name-1.1.0.tgz#26cad8017967aea8731bc42961d04a3d5988accc"
   integrity sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==
+
+formdata-polyfill@^4.0.10:
+  version "4.0.10"
+  resolved "https://registry.yarnpkg.com/formdata-polyfill/-/formdata-polyfill-4.0.10.tgz#24807c31c9d402e002ab3d8c720144ceb8848423"
+  integrity sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==
+  dependencies:
+    fetch-blob "^3.1.2"
 
 fs.realpath@^1.0.0:
   version "1.0.0"
@@ -1511,6 +1543,14 @@ internal-slot@^1.0.3:
     has "^1.0.3"
     side-channel "^1.0.4"
 
+ip-address@8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/ip-address/-/ip-address-8.1.0.tgz#1fe9b4509b51ff7d2fbbef4d3d26994d9915a459"
+  integrity sha512-Wz91gZKpNKoXtqvY8ScarKYwhXoK4r/b5QuT+uywe/azv0/nUCo7Bh0IRRI7F9DHR06kJNWtzMGLIbXavngbKA==
+  dependencies:
+    jsbn "1.1.0"
+    sprintf-js "1.1.2"
+
 is-arrayish@^0.3.1:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.3.2.tgz#4574a2ae56f7ab206896fb431eaeed066fdf8f03"
@@ -1701,6 +1741,11 @@ js-yaml@^4.1.0:
   dependencies:
     argparse "^2.0.1"
 
+jsbn@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-1.1.0.tgz#b01307cb29b618a1ed26ec79e911f803c4da0040"
+  integrity sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==
+
 json-schema-traverse@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz#69f6a87d9513ab8bb8fe63bdb0979c448e684660"
@@ -1881,6 +1926,20 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
+
+node-domexception@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/node-domexception/-/node-domexception-1.0.0.tgz#6888db46a1f71c0b76b3f7555016b63fe64766e5"
+  integrity sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==
+
+node-fetch@3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.3.2.tgz#d1e889bacdf733b4ff3b2b243eb7a12866a0b78b"
+  integrity sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==
+  dependencies:
+    data-uri-to-buffer "^4.0.0"
+    fetch-blob "^3.1.4"
+    formdata-polyfill "^4.0.10"
 
 nodemon@2.0.20:
   version "2.0.20"
@@ -2382,6 +2441,11 @@ source-map@^0.6.0:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
+sprintf-js@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.1.2.tgz#da1765262bf8c0f571749f2ad6c26300207ae673"
+  integrity sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==
+
 sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
@@ -2780,6 +2844,11 @@ util-deprecate@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
+
+web-streams-polyfill@^3.0.3:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.3.2.tgz#32e26522e05128203a7de59519be3c648004343b"
+  integrity sha512-3pRGuxRF5gpuZc0W+EpwQRmCD7gRqcDOMt688KmdlDAgAyaB1XlN0zq2njfDNm44XVdIouE7pZ6GzbdyH47uIQ==
 
 webidl-conversions@^4.0.2:
   version "4.0.2"
