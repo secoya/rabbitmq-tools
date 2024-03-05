@@ -1,6 +1,7 @@
 import { ConnectionManager, ConnectionOptions } from './ConnectionManager.js';
 import { Message } from './Consumer.js';
 import { Publisher } from './Publisher.js';
+import type { Span } from '@opentelemetry/api';
 import { ContextCreator } from '@secoya/context-helpers/assignment.js';
 import { FullLogContext, LogContext, RootLogContext } from '@secoya/context-helpers/log.js';
 import { ServiceNameContext } from '@secoya/context-helpers/servicename.js';
@@ -14,22 +15,10 @@ import {
 	SpanOptions,
 	traceFn,
 	TracerContext,
+	extractSpan,
 } from '@secoya/context-helpers/trace.js';
 import { MaybeContext } from '@secoya/context-helpers/utils.js';
 import type amqplib from 'amqplib';
-import type { Span } from 'opentracing';
-
-const opentracing = await (async () => {
-	try {
-		return await import('opentracing');
-	} catch (e) {
-		if (e instanceof Error && (e as any).code === 'ERR_MODULE_NOT_FOUND') {
-			return e;
-		} else {
-			throw e;
-		}
-	}
-})();
 
 export interface RabbitMQContext {
 	readonly rabbitmq: ConnectionManager;
@@ -91,22 +80,15 @@ export function createRabbitMQConsumerWrapper<Destination extends FullLogContext
 			return (message: Message) => {
 				const [_spanOptions, _fn] = buildSpanOptions(spanOptionsOrFn, fn);
 				if (isTracerContext(source)) {
-					if (opentracing instanceof Error) {
-						throw opentracing;
-					}
 					const { tracer } = source;
-					const parentSpanContext = tracer.extract(
-						opentracing.FORMAT_HTTP_HEADERS,
-						message.message.properties.headers,
-					);
 					let span: Span;
-					// jaeger returns an empty SpanContext instead of null if there is no span
-					if (parentSpanContext !== null && parentSpanContext.toSpanId() !== '') {
-						span = createSpan(tracer, { ..._spanOptions, relation: 'follow' }, parentSpanContext);
+					const parentSpan = extractSpan(message.message.properties.headers);
+					if (parentSpan) {
+						span = createSpan(tracer, { ..._spanOptions, relation: 'follow' }, parentSpan.spanContext());
 					} else {
 						span = createSpan(tracer, { ..._spanOptions, relation: 'new' });
 					}
-					span.addTags({
+					span.setAttributes({
 						'initiator.transport': 'rabbitmq',
 						'initiator.method': 'wrapRabbitMQConsumer',
 					});
@@ -134,11 +116,8 @@ export function createRabbitMQPublisherWrapper(
 		wrapRabbitMQPublisher: (publisher: Publisher) => {
 			const wrappedPublisher = (msg: Buffer, options: PublishingOptions = {}, timeout?: number) => {
 				if (isTraceContext(destination)) {
-					if (opentracing instanceof Error) {
-						throw opentracing;
-					}
 					const { extendWithSpanId } = destination;
-					options.headers = extendWithSpanId(options.headers ?? {}, opentracing.FORMAT_HTTP_HEADERS);
+					options.headers = extendWithSpanId(options.headers ?? {});
 					return publisher(msg, options, timeout);
 				} else {
 					return publisher(msg, options, timeout);

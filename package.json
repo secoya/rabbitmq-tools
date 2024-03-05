@@ -20,10 +20,11 @@
 		}
 	},
 	"devDependencies": {
+		"@opentelemetry/api": "1.8.0",
 		"@rushstack/eslint-patch": "1.2.0",
-		"@secoya/context-helpers": "5.1.4",
+		"@secoya/context-helpers": "6.0.0-beta6",
 		"@secoya/eslint-plugin-orbit": "2.0.2",
-		"@secoya/nodejs-build-tools": "5.0.1",
+		"@secoya/nodejs-build-tools": "6.0.0-beta7",
 		"@secoya/prettier-config": "1.0.0",
 		"@types/amqplib": "0.8.2",
 		"eslint": "8.25.0",
@@ -40,7 +41,6 @@
 	},
 	"peerDependencies": {
 		"@secoya/context-helpers": "5.1.4",
-		"opentracing": "^0.14.7",
 		"tslib": "^2.4.0"
 	},
 	"peerDependenciesMeta": {

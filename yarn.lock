@@ -81,6 +81,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@opentelemetry/api@1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.8.0.tgz#5aa7abb48f23f693068ed2999ae627d2f7d902ec"
+  integrity sha512-I/s6F7yKUDdtMsoBWXJe8Qz40Tui5vsuKCWJEWVL+5q9sSWRzzx6v2KeNsOBEwd94j0eWkpWCH4yB6rZg9Mf0w==
+
 "@pkgr/utils@^2.3.1":
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/@pkgr/utils/-/utils-2.3.1.tgz#0a9b06ffddee364d6642b3cd562ca76f55b34a03"
@@ -98,20 +103,10 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
   integrity sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==
 
-"@secoya/context-helpers@5.1.3":
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/@secoya/context-helpers/-/context-helpers-5.1.3.tgz#92d4e13c494f5536e36256de5fd06d06d05b7ace"
-  integrity sha512-UAOGzF7vPSNJk5um9Kpi7w9yLCdPO5HzYhPe94+0GwBJfOWnr790Dt87xOHJrneeMip5E0smOy7J34knQ28twA==
-  dependencies:
-    "@colors/colors" "1.5.0"
-    ip-address "8.1.0"
-    node-fetch "3.3.2"
-    winston "3.3.3"
-
-"@secoya/context-helpers@5.1.4":
-  version "5.1.4"
-  resolved "https://registry.yarnpkg.com/@secoya/context-helpers/-/context-helpers-5.1.4.tgz#6196be27d96a2e7cd2dd2deff37f49f0162d2ffe"
-  integrity sha512-FQ+ycZrKnWqbNh4qnP+d6/XlPGpijWZFiE+yUhLxuseWglsPzQq5W61ZDXM2Lf8feygjdznMDgMUrVLljj/xmQ==
+"@secoya/context-helpers@6.0.0-beta6":
+  version "6.0.0-beta6"
+  resolved "https://registry.yarnpkg.com/@secoya/context-helpers/-/context-helpers-6.0.0-beta6.tgz#9c388416ae4503bf3bfd46a0bc2587e011d21938"
+  integrity sha512-WZ1AEF3LbauTgpcxxcFBD6OhvGjuUzgBTcjZ6JAhApFZmM5K7HqMU60Dt/dfn3KWB4iXdn49cmTr6dHS+OGEPQ==
   dependencies:
     "@colors/colors" "1.5.0"
     ip-address "8.1.0"
@@ -146,12 +141,12 @@
   dependencies:
     aggregate-error "1.0.0"
 
-"@secoya/nodejs-build-tools@5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@secoya/nodejs-build-tools/-/nodejs-build-tools-5.0.1.tgz#e233cfe1d18e6a118ec79a4b8ac5421739b3a552"
-  integrity sha512-fOV75mvO5deMyO3jKuXmGfWnFkEdDg76Oc8SBPup0fvTBhfjAXbQZJEK2W93cc0jMoXHW16iCkkDG62Os4HhZw==
+"@secoya/nodejs-build-tools@6.0.0-beta7":
+  version "6.0.0-beta7"
+  resolved "https://registry.yarnpkg.com/@secoya/nodejs-build-tools/-/nodejs-build-tools-6.0.0-beta7.tgz#d42da2ac849c26914953f9d18a75853a2cbd1390"
+  integrity sha512-aLYXM5E7z4iEJ3eqqa0O+7biPAEiIPAb5kLd/Mi+v6dXhrr46UIjKYpB330riyOyt4ti9R+cpZQqEMJiKgpfJg==
   dependencies:
-    "@secoya/context-helpers" "5.1.3"
+    "@secoya/context-helpers" "6.0.0-beta6"
     "@secoya/graphql-fragment-type-generator" "3.0.4"
     chokidar "3.5.3"
     docopt "0.6.2"
