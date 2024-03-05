@@ -103,10 +103,10 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
   integrity sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==
 
-"@secoya/context-helpers@6.0.0-beta6":
-  version "6.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/@secoya/context-helpers/-/context-helpers-6.0.0-beta6.tgz#9c388416ae4503bf3bfd46a0bc2587e011d21938"
-  integrity sha512-WZ1AEF3LbauTgpcxxcFBD6OhvGjuUzgBTcjZ6JAhApFZmM5K7HqMU60Dt/dfn3KWB4iXdn49cmTr6dHS+OGEPQ==
+"@secoya/context-helpers@6.0.0-beta7":
+  version "6.0.0-beta7"
+  resolved "https://registry.yarnpkg.com/@secoya/context-helpers/-/context-helpers-6.0.0-beta7.tgz#5caf1fc32b361d528bb0dd034440a386a50e30b9"
+  integrity sha512-9IEgr3FbEnHPUto16W70vpdH0SoSe8ZXcFaYs7YqhiAtiJrcusRV/djxrOjQwi2CGqgHYhdx4F0gBsmsIKeYXA==
   dependencies:
     "@colors/colors" "1.5.0"
     ip-address "8.1.0"
@@ -141,12 +141,12 @@
   dependencies:
     aggregate-error "1.0.0"
 
-"@secoya/nodejs-build-tools@6.0.0-beta7":
-  version "6.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/@secoya/nodejs-build-tools/-/nodejs-build-tools-6.0.0-beta7.tgz#d42da2ac849c26914953f9d18a75853a2cbd1390"
-  integrity sha512-aLYXM5E7z4iEJ3eqqa0O+7biPAEiIPAb5kLd/Mi+v6dXhrr46UIjKYpB330riyOyt4ti9R+cpZQqEMJiKgpfJg==
+"@secoya/nodejs-build-tools@6.0.0-beta8":
+  version "6.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/@secoya/nodejs-build-tools/-/nodejs-build-tools-6.0.0-beta8.tgz#3969d0dcd6b89367854311ce9113b98020f1f6fd"
+  integrity sha512-gMv4FHpSFLLOglhU0tZdrWF7NXDrGH6GGuz3oXKGaJQ/kS7FjOJs6uEtQIg7u6eO5evT0YxiJoCDIIZteu4iUQ==
   dependencies:
-    "@secoya/context-helpers" "6.0.0-beta6"
+    "@secoya/context-helpers" "6.0.0-beta7"
     "@secoya/graphql-fragment-type-generator" "3.0.4"
     chokidar "3.5.3"
     docopt "0.6.2"
@@ -2069,11 +2069,6 @@ open@^8.4.0:
     define-lazy-prop "^2.0.0"
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
-
-opentracing@0.14.7:
-  version "0.14.7"
-  resolved "https://registry.yarnpkg.com/opentracing/-/opentracing-0.14.7.tgz#25d472bd0296dc0b64d7b94cbc995219031428f5"
-  integrity sha512-vz9iS7MJ5+Bp1URw8Khvdyw1H/hGvzHWlKQ7eRrQojSCDL1/SrWfrY9QebLw97n2deyRtzHRC3MkQfVNUCo91Q==
 
 optionator@^0.9.1:
   version "0.9.1"
