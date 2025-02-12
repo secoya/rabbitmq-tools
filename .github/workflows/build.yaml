@@ -35,7 +35,7 @@ jobs:
     - name: Create compilation artifact
       run: tar -cf ../dist.tar *
       working-directory: dist
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: dist.tar
         path: dist.tar

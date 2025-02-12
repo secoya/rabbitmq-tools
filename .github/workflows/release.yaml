@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Setup .npmrc
       run: cp tools/_.npmrc .npmrc
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: dist.tar
     - name: Unpack compilation artifact
@@ -38,7 +38,7 @@ jobs:
     - name: Update compilation artifact
       run: tar -cf ../dist.tar *
       working-directory: dist
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: dist.tar
         path: dist.tar
@@ -65,7 +65,7 @@ jobs:
         printf "message<<%s\n%s\n%s\n" "$eof" "$(git tag -l --format='%(contents)' "${REF#refs\/tags\/}")" "$eof" >> $GITHUB_OUTPUT
       env:
         REF: ${{ github.ref }}
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: dist.tar
     - name: Compress release artifact
