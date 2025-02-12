@@ -116,8 +116,8 @@ export function createRabbitMQPublisherWrapper(
 		wrapRabbitMQPublisher: (publisher: Publisher) => {
 			const wrappedPublisher = (msg: Buffer, options: PublishingOptions = {}, timeout?: number) => {
 				if (isTraceContext(destination)) {
-					const { extendWithSpanId } = destination;
-					options.headers = extendWithSpanId(options.headers ?? {});
+					const { extendWithTraceparent } = destination;
+					options.headers = extendWithTraceparent(options.headers ?? {});
 					return publisher(msg, options, timeout);
 				} else {
 					return publisher(msg, options, timeout);
