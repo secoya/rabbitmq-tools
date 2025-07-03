@@ -121,9 +121,13 @@ export function createRabbitMQPublisherWrapper(
 		wrapRabbitMQPublisher: (publisher: Publisher) => {
 			const wrappedPublisher = (msg: Buffer, options: PublishingOptions = {}, timeout?: number) => {
 				if (isTraceContext(destination)) {
-					const { extendWithTraceparent } = destination;
-					options.headers = extendWithTraceparent(options.headers ?? {});
-					return publisher(msg, options, timeout);
+					const { trace } = destination;
+					return trace({ name: 'publish to rabbitmq', kind: SpanKind.PRODUCER }, (ctx) => {
+						if (isTraceContext(ctx)) {
+							options.headers = ctx.extendWithTraceparent(options.headers ?? {});
+						}
+						return publisher(msg, options, timeout);
+					});
 				} else {
 					return publisher(msg, options, timeout);
 				}
