@@ -22,7 +22,7 @@
 	"devDependencies": {
 		"@opentelemetry/api": "1.8.0",
 		"@rushstack/eslint-patch": "1.7.2",
-		"@secoya/context-helpers": "6.4.4",
+		"@secoya/context-helpers": "6.5.2",
 		"@secoya/eslint-plugin-orbit": "2.0.2",
 		"@secoya/nodejs-build-tools": "6.0.0",
 		"@secoya/prettier-config": "1.0.0",

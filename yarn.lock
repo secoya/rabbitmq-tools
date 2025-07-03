@@ -283,10 +283,10 @@
     node-fetch "3.3.2"
     winston "3.3.3"
 
-"@secoya/context-helpers@6.4.4":
-  version "6.4.4"
-  resolved "https://registry.yarnpkg.com/@secoya/context-helpers/-/context-helpers-6.4.4.tgz#b2c5b169304b68c2e8d466391964e5e00849f5b8"
-  integrity sha512-hL4xD0oheYi994q3jeMl9NOuRTe+6sc5ANtvan49Uz/54zpRaBTPsviKvJmBP7y2QofydRt+56LhsvkstFN2/A==
+"@secoya/context-helpers@6.5.2":
+  version "6.5.2"
+  resolved "https://registry.yarnpkg.com/@secoya/context-helpers/-/context-helpers-6.5.2.tgz#0ab4fc2ee9be5c7e64ad6a4b430e89d50b95214d"
+  integrity sha512-jVv+P9wVOxAx3OZIlLwZoCf4Hpu3ZFROJVMTvAe+xEazGwr1poiLrLchb7ahIMyqJLR7y4rfRRJeB70DegYrkw==
   dependencies:
     "@colors/colors" "1.5.0"
     ip-address "9.0.5"

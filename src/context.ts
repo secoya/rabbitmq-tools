@@ -2,6 +2,7 @@ import { ConnectionManager, ConnectionOptions } from './ConnectionManager.js';
 import { Message } from './Consumer.js';
 import { Publisher } from './Publisher.js';
 import type { Span } from '@opentelemetry/api';
+import { SpanKind } from '@opentelemetry/api';
 import { ContextCreator } from '@secoya/context-helpers/assignment.js';
 import { FullLogContext, LogContext, RootLogContext } from '@secoya/context-helpers/log.js';
 import { ServiceNameContext } from '@secoya/context-helpers/servicename.js';
@@ -84,9 +85,13 @@ export function createRabbitMQConsumerWrapper<Destination extends FullLogContext
 					let span: Span;
 					const parentSpan = extractSpan(message.message.properties.headers);
 					if (parentSpan) {
-						span = createSpan(tracer, { ..._spanOptions, relation: 'follow' }, parentSpan.spanContext());
+						span = createSpan(
+							tracer,
+							{ ..._spanOptions, relation: 'follow', kind: SpanKind.CONSUMER },
+							parentSpan.spanContext(),
+						);
 					} else {
-						span = createSpan(tracer, { ..._spanOptions, relation: 'new' });
+						span = createSpan(tracer, { ..._spanOptions, relation: 'new', kind: SpanKind.CONSUMER });
 					}
 					span.setAttributes({
 						'initiator.transport': 'rabbitmq',
