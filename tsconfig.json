@@ -3,5 +3,5 @@
 	"compilerOptions": {
 		"target": "ESNext"
 	},
-	"include": ["src/**/*.ts", "types/includes/**/*.d.ts", "tsup.config.ts"]
+	"include": ["src/**/*.ts", "types/includes/**/*.d.ts", "eslint.config.ts", "tsup.config.ts"]
 }

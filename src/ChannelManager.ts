@@ -12,7 +12,9 @@ export function createChannelObservable(
 		let isCleanupHandlersCalled = false;
 		const onClose = (err?: Error) => {
 			if (!isCleanupHandlersCalled) {
-				cleanupLogic.forEach((v) => v());
+				cleanupLogic.forEach((v) => {
+					v();
+				});
 				isCleanupHandlersCalled = true;
 			}
 			if (err) {
@@ -41,7 +43,9 @@ export function createChannelObservable(
 				// So we schedule the channel closing after potential errors arrive.
 				let channelClosedImmediate: any = null;
 				const onChannelClose = (err?: Error) => {
-					channelClosedImmediate = setImmediate(() => onClose(err));
+					channelClosedImmediate = setImmediate(() => {
+						onClose(err);
+					});
 				};
 				conn.on('close', onConnectionClose);
 				cleanupLogic.push(() => {
@@ -69,7 +73,7 @@ export function createChannelObservable(
 			}
 		};
 
-		createChannel().catch((e) => {
+		createChannel().catch((e: unknown) => {
 			subscriber.error(e);
 		});
 

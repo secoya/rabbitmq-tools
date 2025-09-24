@@ -54,7 +54,7 @@ async function createConsumer(
 			channel
 				.cancel(consumerTag)
 				.then(onConnectionClosed)
-				.catch((e) => {
+				.catch((e: unknown) => {
 					// eslint-disable-next-line no-console
 					console.error('Unhooking consumer error', e);
 					process.exit(1);
@@ -144,7 +144,7 @@ async function createConsumer(
 
 	try {
 		await channel.checkQueue(consumerOptions.queueName);
-		await channel.prefetch(consumerOptions.prefetch || 1); // Not global, ie. per consumer
+		await channel.prefetch(consumerOptions.prefetch ?? 1); // Not global, ie. per consumer
 		consumerTag = (
 			await channel.consume(consumerOptions.queueName, onMessage, {
 				noAck: false,
@@ -184,9 +184,9 @@ export function consumeQueue(
 			connectionClosed,
 			subscriber,
 			onClose,
-		).catch((e: Error) => {
+		).catch((e: unknown) => {
 			// eslint-disable-next-line no-console
-			console.error('Create consumer error', e.stack);
+			console.error('Create consumer error', (e as Error).stack);
 			process.exit(1);
 		});
 

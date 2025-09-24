@@ -5,7 +5,7 @@ import amqplib from 'amqplib';
 import { Channel } from 'amqplib';
 import { IllegalOperationError } from 'amqplib/lib/error.js';
 import { EventEmitter } from 'events';
-import { flatMap, map, retryWhen } from 'rxjs/operators/index.js';
+import { mergeMap, map, retry } from 'rxjs';
 
 type PublishingOptions = Omit<amqplib.Options.Publish, 'persistent'>;
 export interface Publisher {
@@ -33,7 +33,9 @@ export interface PublisherOptions {
 
 function timer(millis: number): Promise<typeof TIMEOUT> {
 	return new Promise<typeof TIMEOUT>((resolve) => {
-		setTimeout(() => resolve(TIMEOUT), millis);
+		setTimeout(() => {
+			resolve(TIMEOUT);
+		}, millis);
 	});
 }
 
@@ -58,12 +60,11 @@ export function createPublisher(
 	connectionClosed: () => void,
 	publisherOptions: PublisherOptions,
 ): Publisher {
-	const maximumInMemoryQueueSize = publisherOptions.maximumInMemoryQueueSize || 100;
+	const maximumInMemoryQueueSize = publisherOptions.maximumInMemoryQueueSize ?? 100;
 	let resolvePromise: (channel: amqplib.Channel) => void;
 	let done = false;
 	let channelPromise: Promise<amqplib.Channel>;
 	const newPromise = () => {
-		// eslint-disable-next-line @secoya/orbit/proper-promise-use, @typescript-eslint/tslint/config
 		channelPromise = new Promise<amqplib.Channel>((resolve) => {
 			resolvePromise = resolve;
 		});
@@ -71,15 +72,17 @@ export function createPublisher(
 	newPromise();
 	const subscription = createChannelObservable(connectionManager, connectionOpened, connectionClosed)
 		.pipe(
-			retryWhen((errors) => {
-				return errors.pipe(
-					map(() => {
-						newPromise();
-						return null;
-					}),
-				);
+			retry({
+				delay: (errors) => {
+					return errors.pipe(
+						map(() => {
+							newPromise();
+							return null;
+						}),
+					);
+				},
 			}),
-			flatMap(async (ch: Channel) => {
+			mergeMap(async (ch: Channel) => {
 				try {
 					await ch.checkQueue(publisherOptions.queueName);
 
@@ -114,7 +117,7 @@ export function createPublisher(
 			try {
 				const success = channel.sendToQueue(publisherOptions.queueName, msg[0], {
 					...msg[1],
-					persistent: publisherOptions.persistent != null ? publisherOptions.persistent : true,
+					persistent: publisherOptions.persistent ?? true,
 				});
 				if (!success) {
 					messages.unshift(msg);
@@ -140,14 +143,13 @@ export function createPublisher(
 			throw new Error('Already closed');
 		}
 		let entry: [Buffer, PublishingOptions, () => void, (err: Error) => void, boolean] = null as any;
-		// eslint-disable-next-line @typescript-eslint/tslint/config
 		const promise = new Promise<void>((resolve, reject) => {
 			entry = [msg, options, resolve, reject, true];
 			messages.push(entry);
 		});
 
 		if (!deliveringMessages) {
-			deliver().catch((e: Error) => {
+			deliver().catch((e: unknown) => {
 				// eslint-disable-next-line no-console
 				console.error(e);
 				process.exit(1);
@@ -157,11 +159,10 @@ export function createPublisher(
 		if (timeout) {
 			const timeoutPromise = timer(timeout);
 
-			// eslint-disable-next-line @secoya/orbit/proper-promise-use
 			const winner = await Promise.race([promise, timeoutPromise]);
 			if (winner === TIMEOUT) {
 				const idx = messages.indexOf(entry);
-				const err = new TimeoutError('Message timed out after ' + timeout + ' milliseconds');
+				const err = new TimeoutError(`Message timed out after ${timeout} milliseconds`);
 				if (idx >= 0) {
 					entry[3](err);
 					messages.splice(idx, 1);

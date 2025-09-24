@@ -61,12 +61,13 @@ export function setupRabbitMQContext(
 	return { rabbitmq };
 }
 
-export type RabbitMQConsumerWrapper<Context> = {
+export interface RabbitMQConsumerWrapper<Context> {
 	(fn: (runtimeContext: Context, message: Message) => any): (message: Message) => ReturnType<typeof fn>;
-	(spanOptionsOrFn: string | Pick<SpanOptions, 'name'>, fn: (runtimeContext: Context, message: Message) => any): (
-		message: Message,
-	) => ReturnType<typeof fn>;
-};
+	(
+		spanOptionsOrFn: string | Pick<SpanOptions, 'name'>,
+		fn: (runtimeContext: Context, message: Message) => any,
+	): (message: Message) => ReturnType<typeof fn>;
+}
 
 export function createRabbitMQConsumerWrapper<Destination extends FullLogContext<any>>(
 	source: MaybeContext<TracerContext>,
@@ -132,6 +133,7 @@ export function createRabbitMQPublisherWrapper(
 					return publisher(msg, options, timeout);
 				}
 			};
+			// eslint-disable-next-line @typescript-eslint/unbound-method
 			wrappedPublisher.closePublisher = publisher.closePublisher;
 			return wrappedPublisher;
 		},

@@ -2,7 +2,7 @@ import { consumeQueue, ConsumerOptions, Message } from './Consumer.js';
 import { createPublisher, Publisher, PublisherOptions } from './Publisher.js';
 import * as amqplib from 'amqplib';
 import { Observable } from 'rxjs';
-import { retry } from 'rxjs/operators/index.js';
+import { retry } from 'rxjs';
 
 export type ConnectionOptions = amqplib.Options.Connect & AmqplibSocketOpts;
 
@@ -21,7 +21,9 @@ function timer(millis: number): {
 	let cancel: () => void = null as any;
 	const p = new Promise<void>((resolve) => {
 		const timeout = setTimeout(resolve, millis);
-		cancel = () => clearTimeout(timeout);
+		cancel = () => {
+			clearTimeout(timeout);
+		};
 	});
 
 	return {
@@ -131,12 +133,12 @@ export class ConnectionManager {
 		try {
 			const ch = await conn.createChannel();
 			for (const topology of this.queueTopology) {
-				const dlx = topology.deadLetterExchange || (topology.deadLetterRoutingKey != null ? '' : undefined);
+				const dlx = topology.deadLetterExchange ?? (topology.deadLetterRoutingKey != null ? '' : undefined);
 				await ch.assertQueue(topology.queueName, {
-					autoDelete: topology.autoDelete != null ? topology.autoDelete : true,
+					autoDelete: topology.autoDelete ?? true,
 					deadLetterExchange: dlx,
 					deadLetterRoutingKey: topology.deadLetterRoutingKey,
-					durable: topology.durable != null ? topology.durable : true,
+					durable: topology.durable ?? true,
 					overflow: topology.overflow,
 					queueMode: topology.queueMode,
 				} as amqplib.Options.AssertQueue);
@@ -161,14 +163,14 @@ export class ConnectionManager {
 		this.openConnections--;
 
 		if (this.openConnections === 0) {
-			const conn = this.conn as amqplib.Connection;
+			const conn = this.conn!;
 			this.connection = null;
 			this.conn = null;
 			this.connected = false;
 			if (!this.isClosing) {
-				conn.close().catch((e) => {
+				conn.close().catch((e: unknown) => {
 					// eslint-disable-next-line no-console
-					console.error(e.stack);
+					console.error((e as Error).stack);
 					process.exit(1);
 				});
 			}
@@ -180,7 +182,9 @@ export class ConnectionManager {
 	};
 
 	private onDisconnect(err?: Error): void {
-		this.onDisconnectedCallbacks.forEach((v) => v(err));
+		this.onDisconnectedCallbacks.forEach((v) => {
+			v(err);
+		});
 	}
 
 	private onError(err: Error): void {
@@ -193,7 +197,9 @@ export class ConnectionManager {
 	}
 
 	private triggerConnectedCallbacks(): void {
-		this.onConnectedCallbacks.forEach((v) => v());
+		this.onConnectedCallbacks.forEach((v) => {
+			v();
+		});
 	}
 
 	public addQueueTopology(topology: QueueTopology): void {
@@ -204,12 +210,12 @@ export class ConnectionManager {
 		const conn = await this.getConnection();
 		const ch = await conn.createChannel();
 		try {
-			const dlx = topology.deadLetterExchange || (topology.deadLetterRoutingKey != null ? '' : undefined);
+			const dlx = topology.deadLetterExchange ?? (topology.deadLetterRoutingKey != null ? '' : undefined);
 			await ch.assertQueue(topology.queueName, {
-				autoDelete: topology.autoDelete != null ? topology.autoDelete : true,
+				autoDelete: topology.autoDelete ?? true,
 				deadLetterExchange: dlx,
 				deadLetterRoutingKey: topology.deadLetterRoutingKey,
-				durable: topology.durable != null ? topology.durable : true,
+				durable: topology.durable ?? true,
 				overflow: topology.overflow,
 				queueMode: topology.queueMode,
 			} as amqplib.Options.AssertQueue);
@@ -226,14 +232,14 @@ export class ConnectionManager {
 		if (!this.connected) {
 			return;
 		}
-		const conn = this.conn as amqplib.Connection;
+		const conn = this.conn!;
 		this.isClosing = true;
 		await conn.close();
 		this.isClosing = false;
 		return;
 	}
 
-	public consumeQueue(opts: ConsumerOptions, reconnectOnFailure: boolean = true): Observable<Message> {
+	public consumeQueue(opts: ConsumerOptions, reconnectOnFailure = true): Observable<Message> {
 		if (this.onDisconnectedCallbacks.length === 0) {
 			throw new Error('Must hook a callback up to handle disconnect errors. Probably just to log them somewhere');
 		}

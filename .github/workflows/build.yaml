@@ -23,13 +23,13 @@ jobs:
         path: node_modules
         key: node_modules
     - name: Install node_modules/
-      uses: docker://node:18.17.1-alpine3.18
+      uses: docker://node:20.19.5-alpine3.22
       with:
         args: yarn --silent install --frozen-lockfile
       env:
         NPM_TOKEN: ${{ secrets.NPM_TOKEN_RO }}
     - name: Build the release
-      uses: docker://node:18.17.1-alpine3.18
+      uses: docker://node:20.19.5-alpine3.22
       with:
         entrypoint: tools/build.sh
     - name: Create compilation artifact

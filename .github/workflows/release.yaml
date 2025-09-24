@@ -30,7 +30,7 @@ jobs:
     - name: Include README.md in the package
       run: cp README.md dist/
     - name: Publish the package
-      uses: docker://node:18.17.1-alpine3.18
+      uses: docker://node:20.19.5-alpine3.22
       with:
         args: yarn --cwd dist publish --no-git-tag-version
       env:
@@ -43,6 +43,7 @@ jobs:
         name: dist.tar
         path: dist.tar
         retention-days: 1
+        overwrite: true
 
   create-release:
     name: Create GitHub Release
