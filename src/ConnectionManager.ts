@@ -47,6 +47,7 @@ export class ConnectionManager {
 	public get isDisconnecting(): boolean {
 		return this.isClosing;
 	}
+
 	private cancelReconnect: () => void;
 	private conn: amqplib.Connection | null;
 	private connected: boolean;

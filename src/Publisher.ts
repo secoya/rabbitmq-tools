@@ -65,6 +65,7 @@ export function createPublisher(
 	let done = false;
 	let channelPromise: Promise<amqplib.Channel>;
 	const newPromise = () => {
+		// eslint-disable-next-line @secoya/orbit/proper-promise-use
 		channelPromise = new Promise<amqplib.Channel>((resolve) => {
 			resolvePromise = resolve;
 		});
@@ -137,7 +138,7 @@ export function createPublisher(
 	const messages: [Buffer, PublishingOptions, () => void, (err: Error) => void, boolean][] = [];
 	const publish = async (msg: Buffer, options: PublishingOptions = {}, timeout?: number): Promise<void> => {
 		if (messages.length === maximumInMemoryQueueSize) {
-			throw new Error('Maxixmum in memory queue size exceeded');
+			throw new Error('Maximum in memory queue size exceeded');
 		}
 		if (done) {
 			throw new Error('Already closed');
@@ -159,6 +160,7 @@ export function createPublisher(
 		if (timeout) {
 			const timeoutPromise = timer(timeout);
 
+			// eslint-disable-next-line @secoya/orbit/proper-promise-use
 			const winner = await Promise.race([promise, timeoutPromise]);
 			if (winner === TIMEOUT) {
 				const idx = messages.indexOf(entry);

@@ -20,8 +20,8 @@
 	},
 	"devDependencies": {
 		"@opentelemetry/api": "1.9.0",
-		"@secoya/context-helpers": "8.0.3",
-		"@secoya/eslint-plugin-orbit": "2.2.9",
+		"@secoya/context-helpers": "8.0.4",
+		"@secoya/eslint-plugin-orbit": "2.2.10",
 		"@secoya/nodejs-build-tools": "8.0.0",
 		"@secoya/prettier-config": "1.0.0",
 		"@types/amqplib": "0.8.2",
@@ -38,7 +38,7 @@
 		"rxjs": "7.8.2"
 	},
 	"peerDependencies": {
-		"@secoya/context-helpers": "8.0.3",
+		"@secoya/context-helpers": "8.0.4",
 		"tslib": "2.8.1"
 	},
 	"peerDependenciesMeta": {
